@@ -9,8 +9,8 @@
 <body>
 <form method="post" action="LoginInside">
 <table>
-<tr>Name<input type="text" name="username" required></tr>
-<tr> Password <input type="text" name="userpassword" required> </tr>
+<tr>Name<input type="text" name="email" required></tr>
+<tr> Password <input type="text" name="password" required> </tr>
 <tr> <input type ="submit" value="Login"></tr>
 
 </table>
