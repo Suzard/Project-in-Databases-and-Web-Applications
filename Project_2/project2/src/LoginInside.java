@@ -61,16 +61,13 @@ public class LoginInside extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-//		String url="jdbc:mysql://localhost:3306/moviedb,+"\""root+"\","aruna@10+"\"+";
 		String url = "jdbc:mysql:///" + "moviedb" + "?autoReconnect=true&useSSL=false";
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection test_connection = DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false","root","aruna@10");
 			if(test_connection==null) out.println("Connection not successfull");
-//			else out.print("Connection successfull");
 			Statement select = test_connection.createStatement();
-//			String query_customer = "select * from customers where customers.email ='"
-//					+ email+"' +and customers.password=" + 'password';
+
 			String query_customer = "select * from customers where customers.email ='"
 					+ email+ "'and customers.password='" + password+"'";
 			System.out.println(query_customer);
@@ -83,7 +80,6 @@ public class LoginInside extends HttpServlet {
 		catch (Exception e){
 			System.out.println(e.getMessage()+"hi");
 		}
-		out.print("HI");
 		out.close();
 		
 		
