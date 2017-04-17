@@ -43,7 +43,6 @@ public class browse extends HttpServlet {
 		String browse = request.getParameter("browse");
 		String val= request.getParameter("a");
 		out.println("Record is : "+val);
-//		if(search)
 	}
 
 }
