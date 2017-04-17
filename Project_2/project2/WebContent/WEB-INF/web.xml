@@ -9,14 +9,21 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
   <servlet>
-  <servlet-name>LoginInside</servlet-name>
-  <servlet-class>LoginInside</servlet-class>
+    <servlet-name>LoginInside</servlet-name>
+    <servlet-class>LoginInside</servlet-class>
   </servlet>
-  
   <servlet-mapping>
-  <servlet-name>LoginInside</servlet-name>
-  <url-pattern>/LoginInside</url-pattern>
+    <servlet-name>LoginInside</servlet-name>
+    <url-pattern>/LoginInside</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>browse</servlet-name>
+    <servlet-class>browse</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>browse</servlet-name>
+    <url-pattern>/browse</url-pattern>
   </servlet-mapping>
 </web-app>

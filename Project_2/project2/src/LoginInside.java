@@ -69,10 +69,17 @@ public class LoginInside extends HttpServlet {
 			Statement select = test_connection.createStatement();
 
 			String query_customer = "select * from customers where customers.email ='"
-					+ email+ "'and customers.password='" + password+"'";
-			System.out.println(query_customer);
+					+ email+ "'and customers.password='" + password+ "'";
+			
 			ResultSet result =  select.executeQuery(query_customer);
-			if(result.next()) System.out.println("Connection Successful");
+			if(result.next()) {
+				//System.out.println("Connection Successful");
+				String welcome_string = "Welcome\t" + result.getString(2) + "\t"+result.getString(3);
+				out.println(welcome_string);
+				response.sendRedirect("browse.jsp");
+//				System.out.println("Welcome");
+				
+			}
 			else System.out.println("Connectin Unsuccesfull");
 			
 		}
@@ -80,6 +87,7 @@ public class LoginInside extends HttpServlet {
 		catch (Exception e){
 			System.out.println(e.getMessage()+"hi");
 		}
+		out.print("HI");
 		out.close();
 		
 		
