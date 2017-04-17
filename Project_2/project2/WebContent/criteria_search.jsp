@@ -12,7 +12,7 @@
 <table>
 
 <tr><input type="radio" name="criteria_search" value="search" >Search</tr>
-<tr><input type="radio" name="criteria_search" value="browse" >Browse</tr>
+<tr><input type="radio" name="criteria_search" value="browse" >Browse</tr><br>
 <tr><input type="submit" name="Submit"> </tr>
 
 </table>

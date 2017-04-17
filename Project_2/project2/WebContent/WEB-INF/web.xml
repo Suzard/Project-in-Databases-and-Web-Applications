@@ -17,8 +17,7 @@
     <servlet-name>LoginInside</servlet-name>
     <url-pattern>/LoginInside</url-pattern>
   </servlet-mapping>
-  
-   <servlet>
+  <servlet>
     <servlet-name>criteria_search</servlet-name>
     <servlet-class>Criteria_search</servlet-class>
   </servlet>

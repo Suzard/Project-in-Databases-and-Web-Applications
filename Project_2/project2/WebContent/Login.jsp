@@ -10,7 +10,7 @@
 <form method="post" action="LoginInside">
 <table>
 <tr>Name<input type="text" name="email" required></tr>
-<tr> Password <input type="text" name="password" required> </tr>
+<tr> Password <input type="text" name="password" required> </tr><br>
 <tr> <input type ="submit" value="Login"></tr>
 
 </table>

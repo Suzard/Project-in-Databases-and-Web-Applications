@@ -1,8 +1,6 @@
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class browse
+ * Servlet implementation class browse_movies
  */
-@WebServlet("/browse")
-public class Criteria_search extends HttpServlet {
+@WebServlet("/browse_movies")
+public class browse_movies extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Criteria_search() {
+    public browse_movies() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,11 +36,6 @@ public class Criteria_search extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
-		PrintWriter out = response.getWriter();
-		
-		String val= request.getParameter("criteria_search");
-		if(val.equals("search")) response.sendRedirect("search_movies.jsp");
-		else if(val.equals("browse")) response.sendRedirect("browse_movies");
 	}
 
 }

@@ -7,6 +7,16 @@
 <title>Insert title here</title>
 </head>
 <body>
+<form method="post" action="LoginInside">
+<table>
+<tr>Title<input type="text" name="title"></tr><br>
+<tr> Year <input type="text" name="year"> </tr><br>
+<tr> Director <input type="text" name="director"> </tr><br>
+<tr> Stars First Name <input type="text" name="star_firstname"> </tr><br>
+<tr> Stars Last Name <input type="text" name="star_lastname"> </tr><br>
+<tr> <input type ="submit" value="submit"></tr><br>
 
+</table>
+</form>
 </body>
 </html>
