@@ -13,13 +13,13 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet implementation class browse
  */
 @WebServlet("/browse")
-public class browse extends HttpServlet {
+public class Criteria_search extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public browse() {
+    public Criteria_search() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,9 +39,8 @@ public class browse extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 		PrintWriter out = response.getWriter();
-		String search = request.getParameter("search");
-		String browse = request.getParameter("browse");
-		String val= request.getParameter("a");
+		
+		String val= request.getParameter("criteria_search");
 		out.println("Record is : "+val);
 	}
 

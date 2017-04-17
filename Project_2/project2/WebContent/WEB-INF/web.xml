@@ -19,11 +19,11 @@
   </servlet-mapping>
   
    <servlet>
-    <servlet-name>browse</servlet-name>
-    <servlet-class>browse</servlet-class>
+    <servlet-name>criteria_search</servlet-name>
+    <servlet-class>Criteria_search</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>browse</servlet-name>
-    <url-pattern>/browse</url-pattern>
+    <servlet-name>criteria_search</servlet-name>
+    <url-pattern>/criteria_Search</url-pattern>
   </servlet-mapping>
 </web-app>

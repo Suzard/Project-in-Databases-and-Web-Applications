@@ -76,7 +76,7 @@ public class LoginInside extends HttpServlet {
 				//System.out.println("Connection Successful");
 				String welcome_string = "Welcome\t" + result.getString(2) + "\t"+result.getString(3);
 				out.println(welcome_string);
-				response.sendRedirect("browse.jsp");
+				response.sendRedirect("criteria_search.jsp");
 //				System.out.println("Welcome");
 				
 			}
