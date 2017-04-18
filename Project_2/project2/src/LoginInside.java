@@ -80,7 +80,7 @@ public class LoginInside extends HttpServlet {
 //				System.out.println("Welcome");
 				
 			}
-			else System.out.println("Connectin Unsuccesfull");
+			else System.out.println("Connection Unsuccessfull");
 			
 		}
 		
