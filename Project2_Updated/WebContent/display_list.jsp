@@ -41,6 +41,7 @@ try {
 		System.out.println(query);
 		ResultSet result = select.executeQuery(query);%>
 		<table border=1 cellpadding=1>
+		<th>Image</th>  
 		<th>ID</th>
 		<th>Title</th>
 		<th>Year</th>
@@ -48,7 +49,9 @@ try {
 		<th>List of genres</th>
 		<th>List of Stars</th>
           <% while(result.next()){%>
+          <% String image_url = result.getURL(9).toString();%>
           <tr>
+        <td><img src=<%=image_url%> style="width:100px;height:100px;">
 		<td><%=result.getInt(1)%></td>
 		<td><%=result.getString(6)%></td>
 		<td><%=result.getString(7)%></td>

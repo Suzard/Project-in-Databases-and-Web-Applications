@@ -77,19 +77,19 @@ public class search_movies extends HttpServlet {
 				// director.toLowerCase() +"'))" + ")";
 				System.out.println(query);
 				ResultSet result = select.executeQuery(query);
-				while (result.next()) {
-					
-					out.print(result.getInt(1));
-					out.print("\t" + result.getString(2));
-					out.print("\t" + result.getString(3));
-					out.print("\t" + result.getDate(4));
-					out.print("\t" + result.getURL(5));
-					out.print("\t" + result.getString(6));
-					out.print("\t" + result.getInt(7));
-					out.print("\t" + result.getString(8));
-					out.print("\t" + result.getURL(9));
-					out.println("\t" + result.getURL(10));
-				}
+//				while (result.next()) {
+//					
+//					out.print(result.getInt(1));
+//					out.print("\t" + result.getString(2));
+//					out.print("\t" + result.getString(3));
+//					out.print("\t" + result.getDate(4));
+//					out.print("\t" + result.getURL(5));
+//					out.print("\t" + result.getString(6));
+//					out.print("\t" + result.getInt(7));
+//					out.print("\t" + result.getString(8));
+//					out.print("\t" + result.getURL(9));
+//					out.println("\t" + result.getURL(10));
+//				}
 
 			}
 		} catch (Exception e) {
