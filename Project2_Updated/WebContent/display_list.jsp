@@ -34,21 +34,26 @@ try {
 				+ "movies.title,movies.year,movies.director,movies.banner_url,movies.trailer_url "
 				+ "from stars inner join movies on stars.id=movies.id" + " "
 				+ "where ((stars.first_name like '%" + star_firstname.toLowerCase() + "%" + "' "
-				+ "and stars.last_name like '%" + star_lastname.toLowerCase() + "%" + "' ) "
+						+ "and stars.last_name like '%" + star_lastname.toLowerCase() + "%" + "' ) "
+				+ "and (movies.year like '%" + year.toLowerCase() + "%" + "' ) "
 				+ "and (movies.director like '%" + director.toLowerCase() + "%" + "') "
 				+ "and (movies.title like '%" + title.toLowerCase() + "%" + "')" + ")";
 		System.out.println(query);
 		ResultSet result = select.executeQuery(query);%>
-		<table border=1 cellpadding=5>
+		<table border=1 cellpadding=1>
 		<th>ID</th>
-		<th>First Name</th>
-		<th>Last Name</th>
 		<th>Title</th>
+		<th>Year</th>
 		<th>Director</th>
 		<th>List of genres</th>
 		<th>List of Stars</th>
           <% while(result.next()){%>
-		<%=result.getString(2)%>
+          <tr>
+		<td><%=result.getInt(1)%></td>
+		<td><%=result.getString(6)%></td>
+		<td><%=result.getString(7)%></td>
+		<td><%=result.getString(8)%></td>
+		<tr>
 		<%}%>
           </table>
 		
