@@ -2,12 +2,15 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.*;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
 
 /**
  * Servlet implementation class criteria_search
@@ -45,6 +48,8 @@ public class criteria_search extends HttpServlet {
         System.out.println(val);
 		if(val.equals("search")) response.sendRedirect("search_movies.jsp");
 		else if(val.equals("browse")) response.sendRedirect("browse_movies");
+//        RequestDispatcher rd=request.getRequestDispatcher("display_list.jsp");  
+//        rd.forward(request, response);
 		
 	}
 

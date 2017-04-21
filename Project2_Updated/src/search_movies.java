@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -77,6 +78,7 @@ public class search_movies extends HttpServlet {
 				System.out.println(query);
 				ResultSet result = select.executeQuery(query);
 				while (result.next()) {
+					
 					out.print(result.getInt(1));
 					out.print("\t" + result.getString(2));
 					out.print("\t" + result.getString(3));
@@ -93,6 +95,9 @@ public class search_movies extends HttpServlet {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+//		response.sendRedirect("display_list.jsp");
+		 RequestDispatcher rd=request.getRequestDispatcher("display_list.jsp");  
+	        rd.forward(request, response);
 	}
 
 }
