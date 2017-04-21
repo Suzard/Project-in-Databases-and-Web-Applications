@@ -14,6 +14,7 @@
 <%@page import="java.sql.*" %>
 <%@page import="javax.servlet.*"%>
 <%Class.forName("com.mysql.jdbc.Driver"); %>
+<%int id=0,prev_id=1; %>
 <%
 String title = request.getParameter("title");
 String year = request.getParameter("year");
@@ -31,8 +32,11 @@ try {
 	else {
 		Statement select = test_connection.createStatement();
 		String query = "select stars.id,stars.first_name,stars.last_name,stars.dob,stars.photo_url,"
-				+ "movies.title,movies.year,movies.director,movies.banner_url,movies.trailer_url "
-				+ "from stars inner join movies on stars.id=movies.id" + " "
+				+ "movies.title,movies.year,movies.director,movies.banner_url,movies.trailer_url, genres_in_movies.genre_id, genres.name "
+				+ ",movies.id" + " "
+				+ "from (((stars inner join movies on stars.id=movies.id)"+
+				  "inner join genres_in_movies on genres_in_movies.movies_id = movies.id)" + " "
+				+ "inner join genres on genres.id = genres_in_movies.genre_id)"
 				+ "where ((stars.first_name like '%" + star_firstname.toLowerCase() + "%" + "' "
 						+ "and stars.last_name like '%" + star_lastname.toLowerCase() + "%" + "' ) "
 				+ "and (movies.year like '%" + year.toLowerCase() + "%" + "' ) "
@@ -50,12 +54,15 @@ try {
 		<th>List of Stars</th>
           <% while(result.next()){%>
           <% String image_url = result.getURL(9).toString();%>
+          <%id= result.getInt(1);%>
           <tr>
         <td><img src=<%=image_url%> style="width:100px;height:100px;">
-		<td><%=result.getInt(1)%></td>
+		<td><%=result.getInt(13)%></td>
 		<td><%=result.getString(6)%></td>
 		<td><%=result.getString(7)%></td>
 		<td><%=result.getString(8)%></td>
+		<td><%=result.getString(12)%></td>
+		<td><%=result.getString(2) + result.getString(3)%></td>
 		<tr>
 		<%}%>
           </table>

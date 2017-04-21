@@ -47,7 +47,7 @@ public class criteria_search extends HttpServlet {
         String val= request.getParameter("criteria_search");
         System.out.println(val);
 		if(val.equals("search")) response.sendRedirect("search_movies.jsp");
-		else if(val.equals("browse")) response.sendRedirect("browse_movies");
+		else if(val.equals("browse")) response.sendRedirect("browse_movies.jsp");
 //        RequestDispatcher rd=request.getRequestDispatcher("display_list.jsp");  
 //        rd.forward(request, response);
 		
