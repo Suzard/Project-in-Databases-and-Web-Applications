@@ -8,11 +8,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class browse
  */
-@WebServlet("/browse")
+@WebServlet("/criteria_search")
 public class Criteria_search extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -40,7 +41,17 @@ public class Criteria_search extends HttpServlet {
 		doGet(request, response);
 		PrintWriter out = response.getWriter();
 		
-		String val= request.getParameter("criteria_search");
+		String first_name = (String)request.getAttribute("first_name");
+		String last_name = (String)request.getAttribute("last_name");
+		String welcome_string = "Welcome\t" + first_name + "\t"+last_name;
+		out.println(welcome_string);
+		
+//		HttpSession session = request.getSession();
+//		String str= session.getAttribute("first_name").toString();
+//		System.out.println(str);
+//		out.println(str);
+		
+		String val= request.getParameter("criteria_Search").toString();
 		if(val.equals("search")) response.sendRedirect("search_movies.jsp");
 		else if(val.equals("browse")) response.sendRedirect("browse_movies");
 	}

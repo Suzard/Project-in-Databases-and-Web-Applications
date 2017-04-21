@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.servlet.ServletException;
@@ -53,7 +54,16 @@ public class search_movies extends HttpServlet {
 			if(test_connection==null) out.println("Connection not successfull");
 			else {
 				Statement select = test_connection.createStatement();
-				String query = "select stars.id,stars.first_name,stars.last_name,stars.dob,stars.photo_url,movies.title,movies.year,movies.director,movies.banner_url,movies.trailer_url from stars inner join movies on stars.id=movies.id order by stars.id asc";
+				String query = "select stars.id,stars.first_name,stars.last_name,stars.dob,stars.photo_url,"
+								+ "movies.title,movies.year,movies.director,movies.banner_url,movies.trailer_url "
+								+ "from stars inner join movies on stars.id=movies.id order by stars.id asc"
+								+ "where stars.first_name = '"+ star_firstname +"'";
+				System.out.println(query);
+				ResultSet result =  select.executeQuery(query);
+				if(result.next()) {
+					out.println(result.getString(2));
+					out.println(result.getString(3));
+				}
 				
 			}
 	}

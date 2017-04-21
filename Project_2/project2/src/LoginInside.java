@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.sun.org.apache.bcel.internal.generic.Select;
 
@@ -45,7 +46,7 @@ public class LoginInside extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -56,6 +57,7 @@ public class LoginInside extends HttpServlet {
 		//doGet(request, response);
 		String username_db = "root";
 		String password_db = "aruna@10";
+		Connection test_connection = null;
 		ResultSet result_login;
 		
 		PrintWriter out = response.getWriter();
@@ -64,7 +66,7 @@ public class LoginInside extends HttpServlet {
 		String url = "jdbc:mysql:///" + "moviedb" + "?autoReconnect=true&useSSL=false";
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection test_connection = DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false","root","aruna@10");
+			test_connection = DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false","root","aruna@10");
 			if(test_connection==null) out.println("Connection not successfull");
 			Statement select = test_connection.createStatement();
 
@@ -72,10 +74,17 @@ public class LoginInside extends HttpServlet {
 					+ email+ "'and customers.password='" + password+ "'";
 			
 			ResultSet result =  select.executeQuery(query_customer);
+			
 			if(result.next()) {
 				//System.out.println("Connection Successful");
 				String welcome_string = "Welcome\t" + result.getString(2) + "\t"+result.getString(3);
 				out.println(welcome_string);
+				
+//				request.setAttribute("first_name",result.getString(2));
+//				request.setAttribute("last_name", result.getString(3));
+//				RequestDispatcher rd = request.getRequestDispatcher("criteria_search");
+//				rd.forward(request,response);
+				
 				response.sendRedirect("criteria_search.jsp");
 //				System.out.println("Welcome");
 				
@@ -85,9 +94,14 @@ public class LoginInside extends HttpServlet {
 		}
 		
 		catch (Exception e){
-			System.out.println(e.getMessage()+"hi");
+			System.out.println(e.getMessage());
 		}
-		out.print("HI");
+//		try {
+//			test_connection.close();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		out.close();
 		
 		
