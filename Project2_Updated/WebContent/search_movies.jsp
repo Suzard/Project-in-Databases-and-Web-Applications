@@ -14,6 +14,7 @@
 <tr> Director <input type="text" name="director"> </tr><br>
 <tr> Stars First Name <input type="text" name="star_firstname"> </tr><br>
 <tr> Stars Last Name <input type="text" name="star_lastname"> </tr><br>
+<tr> Movies Displayed per list <input type="text" name="display_count"> </tr><br>
 <tr> <input type ="submit" value="submit"></tr><br>
 
 </table>

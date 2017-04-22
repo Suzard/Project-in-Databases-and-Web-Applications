@@ -10,18 +10,49 @@
 <title>Insert title here</title>
 </head>
 <body>
+
+<!-- <select id="select_dropdown" name="select_dropdown">
+  <option value="10">10</option></a>
+ <a href="display_list.jsp?display_count=10"> <option value="20">20</option></a>
+ <a href="display_list.jsp?display_count=10"><option value="25">25</option></a>
+ <a href="display_list.jsp?display_count=10"><option value="30">30</option></a>
+</select> -->
+
+
+
 <%@page import="java.io.*" %>
 <%@page import="java.sql.*" %>
 <%@page import="javax.servlet.*"%>
 <%Class.forName("com.mysql.jdbc.Driver"); %>
-<%int id=0,prev_id=1; %>
+<%int id=0,prev_id=1,count=0;%>
 <%
 String title = request.getParameter("title");
 String year = request.getParameter("year");
 String director = request.getParameter("director");
 String star_firstname = request.getParameter("star_firstname");
-String star_lastname = request.getParameter("star_lastname");
-%>
+String star_lastname = request.getParameter("star_lastname");%>
+
+<%out.print("Number of results to be displayed on Page"); %>
+<a href="display_list.jsp?display_count=5">5</a>
+<a href="display_list.jsp?display_count=10">10</a>
+<a href="display_list.jsp?display_count=15">15</a>
+<a href="display_list.jsp?display_count=20">20</a>
+<a href="display_list.jsp?display_count=25">25</a>
+<a href="display_list.jsp?display_count=30">30</a>
+<%-- <%
+
+String display_count1 = request.getParameter("display_count");
+display_count = Integer.parseInt(display_count1);
+System.out.println("opt" + display_count);%> --%>
+<%-- <% 
+try{
+if(request.getParameter("display_count") != null){
+display_count = Integer.parseInt(request.getParameter("display_count"));
+}
+else display_count =5;
+}catch(NumberFormatException e){
+e.printStackTrace();}%> --%>
+
 <%
 try {
 	//PrintWriter out = response.getWriter();
@@ -30,8 +61,9 @@ try {
 	if (test_connection == null)
 		out.println("Connection not successfull");
 	else {
+		int display_count=5,initial_display_count=0;
 		Statement select = test_connection.createStatement();
-		String query = "select stars.id,stars.first_name,stars.last_name,stars.dob,stars.photo_url,"
+ 		String query = "select stars.id,stars.first_name,stars.last_name,stars.dob,stars.photo_url,"
 				+ "movies.title,movies.year,movies.director,movies.banner_url,movies.trailer_url, genres_in_movies.genre_id, genres.name "
 				+ ",movies.id" + " "
 				+ "from (((stars inner join movies on stars.id=movies.id)"+
@@ -39,11 +71,14 @@ try {
 				+ "inner join genres on genres.id = genres_in_movies.genre_id)"
 				+ "where ((stars.first_name like '%" + star_firstname.toLowerCase() + "%" + "' "
 						+ "and stars.last_name like '%" + star_lastname.toLowerCase() + "%" + "' ) "
-				+ "and (movies.year like '%" + year.toLowerCase() + "%" + "' ) "
+				+ "and (movies.year like '%" + year + "%" + "' ) "
 				+ "and (movies.director like '%" + director.toLowerCase() + "%" + "') "
-				+ "and (movies.title like '%" + title.toLowerCase() + "%" + "')" + ")";
+				+ "and (movies.title like '%" + title.toLowerCase() + "%" + "')" + ") ";
+ 				/* + "limit display_count offset initial_display_count";   */
+		
 		System.out.println(query);
-		ResultSet result = select.executeQuery(query);%>
+		ResultSet result = select.executeQuery(query);
+		%>
 		<table border=1 cellpadding=1>
 		<th>Image</th>  
 		<th>ID</th>
@@ -52,6 +87,10 @@ try {
 		<th>Director</th>
 		<th>List of genres</th>
 		<th>List of Stars</th>
+		<%-- <% while(tmp_next.next()) {
+		count++;
+		}
+		%> --%>
           <% while(result.next()){%>
           <% String image_url = result.getURL(9).toString();%>
           <%id= result.getInt(1);%>
