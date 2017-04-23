@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form method="post" action="criteria_search">
+<form method="post" action="display_list.jsp">
 <table>
 
 <tr><input type="radio" name="criteria_search" value="search" >Search</tr>
