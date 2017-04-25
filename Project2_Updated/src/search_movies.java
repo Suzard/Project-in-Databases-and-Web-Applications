@@ -96,7 +96,7 @@ public class search_movies extends HttpServlet {
 //			System.out.println(e.getMessage());
 //		}
 ////		response.sendRedirect("display_list.jsp");
-		 RequestDispatcher rd=request.getRequestDispatcher("display_list.jsp");  
+		 RequestDispatcher rd=request.getRequestDispatcher("display_list.jsp?display_count=10");  
 	        rd.forward(request, response);
 	}
 
