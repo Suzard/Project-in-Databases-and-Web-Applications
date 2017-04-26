@@ -51,45 +51,42 @@
 <%
 String title=Declarations.title, director=Declarations.director, star_firstname=Declarations.star_firstname, 
 		star_lastname=Declarations.star_lastname, query_movies="", page_sort_by=Declarations.page_sort_by, 
-		page_sort_order=Declarations.page_sort_order, year=Declarations.year;
+		page_sort_order=Declarations.page_sort_order;
+int year=2001;
 
-if(request.getParameter("year") !=null){
-	year = request.getParameter("year");
-	Declarations.year = year;
-}
 	if(request.getParameter("title") !=null){
 	title = request.getParameter("title");
 	Declarations.title=title;
-	}else if(request.getParameter("title") !=null){
-		title = Declarations.title;
+	}else{
+		title=Declarations.title;
 	}
-	
+
 	if(request.getParameter("director") !=null){
 	director = request.getParameter("director").toLowerCase();
 	Declarations.director=director;
-	}else if(request.getParameter("director") ==null){
-		director = Declarations.director=director;
+	}else{
+		director=Declarations.director;
 	}
 	
 	if(request.getParameter("star_firstname") !=null){
 	star_firstname = request.getParameter("star_firstname").toLowerCase();
 	Declarations.star_firstname=star_firstname;
-	}else if(request.getParameter("star_firstname") ==null){
-		star_lastname=Declarations.star_lastname;
+	}else{
+		star_firstname=Declarations.star_firstname;
 	}
 	
 	if(request.getParameter("star_last_name") !=null){
 	star_lastname = request.getParameter("star_lastname");
 	Declarations.star_lastname=star_lastname;
-	}else if(request.getParameter("star_last_name") ==null){
-		star_lastname = Declarations.star_lastname;
+	}else{
+		star_lastname=Declarations.star_lastname;
 	}
 	
 	if(request.getParameter("sort_by")!=null){
 		page_sort_by = request.getParameter("sort_by");
 		Declarations.page_sort_by=page_sort_by;
 	}else if(request.getParameter("sort_by")==null){
-		page_sort_by=Declarations.page_sort_by;
+		star_lastname=Declarations.star_lastname;
 	}
 	
 	if(request.getParameter("sort_order")!=null){
@@ -111,7 +108,6 @@ catch(NumberFormatException e){
 }
 out.println("Results Per page:" + "   " + per_page_count);%>&nbsp;&nbsp;
 <%out.println("Results Sort By:" + "  " + page_sort_by);%>&nbsp; &nbsp;
-<%out.println("Results Sort Order:" + "  " + page_sort_order);%>&nbsp; &nbsp;
 <%out.println("Title:  " + title);%>
 
 <%out.println("Director:  " + director);%>
@@ -131,35 +127,24 @@ try {
 		Map<Integer, ArrayList<Object>> data = new LinkedHashMap<Integer, ArrayList<Object>>();
 		
 		Statement select_movies = test_connection.createStatement();
-		Statement select_movies_main = test_connection.createStatement();
 		Statement select_stars = test_connection.createStatement();
 		Statement select_genres = test_connection.createStatement();
 		if(request.getParameter("year") !=null)
 		{
-		year = request.getParameter("year");
+		year = Integer.parseInt(request.getParameter("year"));
+		Declarations.year = year;
 		out.println("Year:  " + year);
-		System.out.println("Hello 1");
-		query_movies = "select movies.id from ((stars_in_movies inner join movies on  stars_in_movies.movie_id=movies.id) "
-				+ "inner join stars on stars.id=stars_in_movies.star_id) "
-				+ "where movies.year = " + year +""
-				 + " and movies.director like '%" + director + "%" + "' "
-				+ "and (movies.title like '%" + title + "%" + "') "
-				+ "and (stars.first_name like '%" + star_firstname + "%" + "' "
-				+ "and stars.last_name like '%" + star_lastname + "%' ) "
-				+ "group by movies.id "
-				+ "order by movies." + page_sort_by+" "+page_sort_order;
-		System.out.println("Hello 2");
+		query_movies = "select * from movies "
+						+ "where (movies.year ='" + year + "' "
+						+ " and movies.director like '%" + director + "%' "
+						+ " and movies.title like '%" + title + "%' "
+						+ " ) order by movies." + page_sort_by + " "+page_sort_order;
+
 		}else{
-			System.out.println("Hello 3");
-			query_movies = "select movies.id from ((stars_in_movies inner join movies on  stars_in_movies.movie_id=movies.id) "
-					+ "inner join stars on stars.id=stars_in_movies.star_id) "
-				 	 + " where movies.director like '%" + director + "%" + "' "
-					+ "and (movies.title like '%" + title + "%" + "') "
-					+ "and (stars.first_name like '%" + star_firstname + "%" + "' "
-					+ "and stars.last_name like '%" + star_lastname + "%' ) "
-					+ " group by movies.id"
-					+ " order by movies." + page_sort_by+" "+page_sort_order; 
-			System.out.println("Hello 4");
+			query_movies = "select * from movies "
+					+ " where movies.director like '%" + director + "%' "
+					+ " and movies.title like '%" + title + "%' "
+					+ " order by movies." + page_sort_by + " "+page_sort_order;
 		}
 				
 		System.out.println("Query_movies : " + query_movies);
@@ -171,16 +156,11 @@ try {
 		ArrayList<String> genre_list = new ArrayList<String>();
 		ArrayList<Object> final_list =  new ArrayList<Object>();
 		ArrayList<Object> star_list = new ArrayList<Object>();
-		
-		String query_movies_main = "select * from movies where movies.id =" + result_movies.getInt("id");
-		ResultSet result_movies_main = select_movies_main.executeQuery(query_movies_main);
-		System.out.println("Query_movies_main : " + query_movies_main);
-		while(result_movies_main.next()){
 		String query_stars = "select * from (stars_in_movies inner join stars on  stars.id=stars_in_movies.star_id) "
-				+ "where stars.first_name like '%" + star_firstname.toLowerCase() + "%" + "' "
-				+ "and stars.last_name like '%" + star_lastname.toLowerCase() + "%' "
-				+ "and stars_in_movies.movie_id = "+ result_movies_main.getInt("id");
-		 System.out.println("Query Stars:"+ query_stars);	 	
+				+ "where stars.first_name like '%" + Declarations.star_firstname + "%" + "' "
+				+ "and stars.last_name like '%" + Declarations.star_lastname + "%' "
+				+ "and stars_in_movies.movie_id = "+ result_movies.getInt("id");
+		/* System.out.println("Query Stars:"+ query_stars);	 */	
 		
 		ResultSet result_stars = select_stars.executeQuery(query_stars);
 	    while(result_stars.next()){
@@ -193,8 +173,8 @@ try {
 					+"(genres inner join genres_in_movies on "
 					+"genres.id=genres_in_movies.genre_id ) "
 					+"where genres_in_movies.movies_id=" 
-					+result_movies_main.getInt("id");
-		 System.out.println("Query_Genres" + query_genres);  
+					+result_movies.getInt("id");
+		/* System.out.println("Query_Genres" + query_genres);  */
 		ResultSet result_genres = select_genres.executeQuery(query_genres);
 		while(result_genres.next()){
 			String name = result_genres.getString(2);
@@ -204,15 +184,15 @@ try {
 /* 		System.out.println("Genre List" + genre_list);
 		System.out.println("Genre_list :" + genre_list);
 		System.out.println("Director :" + result_movies.getString("director")); */
-				final_list.add(result_movies_main.getURL("banner_url"));
-				final_list.add(result_movies_main.getString("title"));
-				final_list.add(result_movies_main.getString("year"));
-				final_list.add(result_movies_main.getString("director"));
+				final_list.add(result_movies.getURL("banner_url"));
+				final_list.add(result_movies.getString("title"));
+				final_list.add(result_movies.getString("year"));
+				final_list.add(result_movies.getString("director"));
 				final_list.add(genre_list);
 				final_list.add(star_list);
 				
 				data.put(result_movies.getInt("id"), final_list);
-		}}	
+		}	
 		//System.out.println("Final List" + data);
 		Iterator <Map.Entry<Integer, ArrayList<Object>>> iterator_map = data.entrySet().iterator();
 		%>
@@ -225,8 +205,8 @@ try {
 			<th>List of genres</th>
 			<th>List of Stars</th>
 	    <%while (iterator_map.hasNext() && counter<per_page_count) {
-	    	//System.out.println("Counter "+counter++);
-	    	counter++;
+	    	System.out.println("Counter "+counter++);
+	    	
 	        Map.Entry <Integer, ArrayList<Object>> entry_list = iterator_map.next();
 	        ArrayList<Object> value_list = entry_list.getValue();%>
 	        
