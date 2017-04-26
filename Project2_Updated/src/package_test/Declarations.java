@@ -2,7 +2,7 @@ package package_test;
 
 public class Declarations {
 public static int display_count;
-public static String year;
+public static String year="2002";
 public static String star_firstname="";
 public static String star_lastname="";
 public static String title="";

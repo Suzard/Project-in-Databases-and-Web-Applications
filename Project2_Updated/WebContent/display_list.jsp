@@ -47,20 +47,26 @@
 <%@page import="java.util.*"%> 
 <%@page import="package_test.*" %>
 <%Class.forName("com.mysql.jdbc.Driver"); %>
-<%int id=0,prev_id=1,count=0, counter=0;%>
+<%int id=0,prev_id=1,count=0, counter=0,counter1=0;%>
 <%
 String title=Declarations.title, director=Declarations.director, star_firstname=Declarations.star_firstname, 
 		star_lastname=Declarations.star_lastname, query_movies="", page_sort_by=Declarations.page_sort_by, 
 		page_sort_order=Declarations.page_sort_order, year=Declarations.year;
 
-if(request.getParameter("year") !=null){
+int display_count = Declarations.display_count;
+
+if(request.getParameter("year") != null){
 	year = request.getParameter("year");
 	Declarations.year = year;
+	out.println("year in the box :" + year);
+}else if (request.getParameter("year")==null){
+	year= Declarations.year;
+	out.println("year in the boxnull:" + year);
 }
 	if(request.getParameter("title") !=null){
 	title = request.getParameter("title");
 	Declarations.title=title;
-	}else if(request.getParameter("title") !=null){
+	}else if(request.getParameter("title") ==null){
 		title = Declarations.title;
 	}
 	
@@ -78,10 +84,10 @@ if(request.getParameter("year") !=null){
 		star_lastname=Declarations.star_lastname;
 	}
 	
-	if(request.getParameter("star_last_name") !=null){
+	if(request.getParameter("star_lastname") !=null){
 	star_lastname = request.getParameter("star_lastname");
 	Declarations.star_lastname=star_lastname;
-	}else if(request.getParameter("star_last_name") ==null){
+	}else if(request.getParameter("star_lastname") ==null){
 		star_lastname = Declarations.star_lastname;
 	}
 	
@@ -98,18 +104,23 @@ if(request.getParameter("year") !=null){
 	}else if(request.getParameter("sort_order")==null){
 		page_sort_order=Declarations.page_sort_order;
 	}
-	int per_page_count= Declarations.display_count;
-	Declarations.display_count = per_page_count;
+	
+	/* if(request.getParameter("display_count")!=null){
+	display_count= Declarations.display_count;
+	Declarations.display_count = display_count;
+	} */
 	
 try{
-if(request.getParameter("display_count") != null)
-	per_page_count = Integer.parseInt(request.getParameter("display_count"));
-    Declarations.display_count = per_page_count;
-}
+if(request.getParameter("display_count") != null){
+	display_count = Integer.parseInt(request.getParameter("display_count"));
+    Declarations.display_count = display_count;
+} else if(request.getParameter("display_count")==null){
+	display_count = Declarations.display_count;
+}}
 catch(NumberFormatException e){
 /* 	e.printtrace(); */
 }
-out.println("Results Per page:" + "   " + per_page_count);%>&nbsp;&nbsp;
+out.println("Results Per page:" + "   " + display_count);%>&nbsp;&nbsp;
 <%out.println("Results Sort By:" + "  " + page_sort_by);%>&nbsp; &nbsp;
 <%out.println("Results Sort Order:" + "  " + page_sort_order);%>&nbsp; &nbsp;
 <%out.println("Title:  " + title);%>
@@ -134,12 +145,15 @@ try {
 		Statement select_movies_main = test_connection.createStatement();
 		Statement select_stars = test_connection.createStatement();
 		Statement select_genres = test_connection.createStatement();
-		if(request.getParameter("year") !=null)
+		System.out.println("Year : " + year);
+		//if(request.getParameter("year") !=null && year.length()!=0)
+		if(request.getParameter("year")!= null && request.getParameter("year")!= "")
 		{
 		year = request.getParameter("year");
+		Declarations.year = year;
 		out.println("Year:  " + year);
 		System.out.println("Hello 1");
-		query_movies = "select movies.id from ((stars_in_movies inner join movies on  stars_in_movies.movie_id=movies.id) "
+		query_movies = "select movies.id from ((stars_in_movies inner join movies on stars_in_movies.movie_id=movies.id) "
 				+ "inner join stars on stars.id=stars_in_movies.star_id) "
 				+ "where movies.year = " + year +""
 				 + " and movies.director like '%" + director + "%" + "' "
@@ -147,9 +161,29 @@ try {
 				+ "and (stars.first_name like '%" + star_firstname + "%" + "' "
 				+ "and stars.last_name like '%" + star_lastname + "%' ) "
 				+ "group by movies.id "
-				+ "order by movies." + page_sort_by+" "+page_sort_order;
+				+ "order by movies." + page_sort_by+" "+page_sort_order
+				+ " limit 0," + display_count ;
 		System.out.println("Hello 2");
-		}else{
+		}
+		  else if(Declarations.year!=null && Declarations.year!="")
+		{
+			 year = Declarations.year;
+			out.println("It went inside");
+		
+		out.println("Year:  " + year);
+		System.out.println("Hello 1");
+		query_movies = "select movies.id from ((stars_in_movies inner join movies on stars_in_movies.movie_id=movies.id) "
+				+ "inner join stars on stars.id=stars_in_movies.star_id) "
+				+ "where movies.year = " + year +""
+				 + " and movies.director like '%" + director + "%" + "' "
+				+ "and (movies.title like '%" + title + "%" + "') "
+				+ "and (stars.first_name like '%" + star_firstname + "%" + "' "
+				+ "and stars.last_name like '%" + star_lastname + "%' ) "
+				+ "group by movies.id "
+				+ "order by movies." + page_sort_by+" "+page_sort_order
+				+ " limit 0," + display_count;
+		System.out.println("Hello 2");
+		}  else{
 			System.out.println("Hello 3");
 			query_movies = "select movies.id from ((stars_in_movies inner join movies on  stars_in_movies.movie_id=movies.id) "
 					+ "inner join stars on stars.id=stars_in_movies.star_id) "
@@ -158,7 +192,8 @@ try {
 					+ "and (stars.first_name like '%" + star_firstname + "%" + "' "
 					+ "and stars.last_name like '%" + star_lastname + "%' ) "
 					+ " group by movies.id"
-					+ " order by movies." + page_sort_by+" "+page_sort_order; 
+					+ " order by movies." + page_sort_by+" "+page_sort_order
+					+ " limit 0," + display_count ; 
 			System.out.println("Hello 4");
 		}
 				
@@ -224,7 +259,7 @@ try {
 			<th>Director</th>
 			<th>List of genres</th>
 			<th>List of Stars</th>
-	    <%while (iterator_map.hasNext() && counter<per_page_count) {
+	    <%while (iterator_map.hasNext()) {
 	    	//System.out.println("Counter "+counter++);
 	    	counter++;
 	        Map.Entry <Integer, ArrayList<Object>> entry_list = iterator_map.next();
@@ -244,7 +279,7 @@ try {
 	     <% //iterator_map.remove(); 
 	    }%>    </table>
 	    
-		
+	    
 	<%}}
 catch (Exception e) {
 	System.out.println(e.getMessage());
