@@ -166,12 +166,12 @@ String genre_value = URLDecoder.decode(encoded_genre_value);
 		<td><%=Integer.parseInt(entry.getKey().toString())%></td>
 		<% String q = e.get(0).toString();%>
 		<%String encodedString = URLEncoder.encode(q, "UTF-8"); %>		
-		<td><a href= "movie_file.jsp?Movie=<%=q%>" ><%=q%></a></td> <!-- title -->
+		<td><a href= "movie_file.jsp?Movie=<%=encodedString%>" ><%=q%></a></td> <!-- title -->
 		<td><%=e.get(1).toString()%></td> <!-- year -->
 		<td><%=e.get(2).toString()%></td> <!-- director -->
 		<td><% while(iterate_genre.hasNext()){ %>
 			<%String encoded_name_v = iterate_genre.next(); %>	
-			<%String genre_name_v = URLEncoder.encode(encoded_name_v); %>
+			<%String genre_name_v = URLEncoder.encode(encoded_name_v, "UTF-8"); %>
 		
 		<a href= "display_genres.jsp?button_clicked=<%=genre_name_v%>&page_number=<%=page_number%>&display_count=<%=display_count%>" ><%=encoded_name_v%></a>
 		<% }%>

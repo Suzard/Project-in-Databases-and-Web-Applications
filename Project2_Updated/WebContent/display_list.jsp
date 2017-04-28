@@ -309,7 +309,7 @@ try {
 		
 		ResultSet result_stars = select_stars.executeQuery(query_stars);
 	    while(result_stars.next()){
-	    	String star_name = result_stars.getString("first_name") + " " + result_stars.getString("last_name"); 
+	    	String star_name = result_stars.getString("first_name") + "~" + result_stars.getString("last_name"); 
 	    	star_list.add(star_name);
 	    }
 	    /* System.out.println(star_list); */
@@ -356,20 +356,56 @@ try {
 	    	//System.out.println("Counter "+counter++);
 	    	counter++;
 	        Map.Entry <Integer, ArrayList<Object>> entry_list = iterator_map.next();
-	        ArrayList<Object> value_list = entry_list.getValue();%>
+	        ArrayList<Object> value_list = entry_list.getValue();
+	        ArrayList<Object> get_genrelist = (ArrayList) value_list.get(4);
+	        ArrayList<Object> get_starlist = (ArrayList) value_list.get(5);
+	        //get_genrelist.add(value_list.get(4).toString());
+	        //Iterator <Object> iterate_genre = get_genrelist.iterator();%>
 	        
 
 	    <tr>
 		<td><img src=<%=value_list.get(0).toString()%> style="width:100px;height:100px;"></td>
 		<td><%=entry_list.getKey().toString()%></td>
-		<td><%=value_list.get(1).toString()%></td>
+		<td>
+		<%String movie_name =  value_list.get(1).toString();
+		String encoded_moviesname = URLEncoder.encode(movie_name);%>
+		<a href="movie_file.jsp?Movie=<%=encoded_moviesname%>"><%=movie_name%></a>
+		</td>
 		<td><%=value_list.get(2).toString()%></td>
 		<td><%=value_list.get(3).toString()%></td>
-		<td><%=value_list.get(4).toString()%></td>
-		<td><%=value_list.get(5).toString()%></td>
+		<%-- <td><%=value_list.get(4).toString()%></td> --%>
+		<td><%  for( Object genre_name_obj : get_genrelist){
+				String genre_name_encode = genre_name_obj.toString();
+				String genre_name = URLEncoder.encode(genre_name_encode, "UTF-8");
+				
+				//out.println("The result is " + genre_name_encode);
+				%>
+				<a href="display_genres.jsp?button_clicked=<%=genre_name_encode%>"><%=genre_name_encode%></a>				
+						
+				
+				<%//out.println(genre_name_obj.toString());
+		}%>
+	 </td>
+		<td><%for(Object star_name_obj:get_starlist){
+			
+			 String star_fullname = star_name_obj.toString();
+			 //out.println(star_fullname);
+			String[] splitting = star_fullname.split("~");
+			//String first_name=splitting[0];
+			//out.println(URLEncoder.encode(splitting[0],"UTF-8"));
+			/* out.println("Split1:"+ splitting[0] );
+			out.println("Split2:"+splitting[1]); */
+			String encoded_firstname = URLEncoder.encode(splitting[0],"UTF-8");
+			String encoded_lastname = URLEncoder.encode(splitting[1],"UTF-8");%>
+			
+		
+	 <a href="star_file.jsp?Star=<%=encoded_firstname%>&Last=<%=encoded_lastname%>"><%=splitting[0]+" " +splitting[1]%></a>  
+		<%-- <%=value_list.get(5).toString()%> --%>
+		<%} %></td>
+		
 	    <tr>
 	
-	     <% //iterator_map.remove(); 
+	     <% 
 	    }%>    </table>
 	    
 	    <%
