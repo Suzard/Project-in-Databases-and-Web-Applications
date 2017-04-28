@@ -13,5 +13,7 @@ public static String title="";
 public static String director="";
 public static String page_sort_by="id";
 public static String page_sort_order="asc";
+public static final String username="root";
+public static final String password="aruna@10";
 
 }

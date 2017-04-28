@@ -1,5 +1,8 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%//Reference https://www3.ntu.edu.sg/home/ehchua/programming/java/JSPByExample.html %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -7,41 +10,56 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form method="post" action="browse_movies">
-<p>Please click a button to see movies listed for genre<p>
-<table>
-<tr> <input type ="submit" name="button_clicked"value='Classic'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Coming-of-Age-Drama'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Gangster'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Suspense'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Indie'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Biography'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Spy'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='James Bond'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Roman'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Animation'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Musical'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Mystery'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Sport'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Documentary'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Musical/Performing Art'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Crime'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Music'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='History'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='War'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Family'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Action'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Adventure'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Drama'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Comedy'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Horror'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Thriller'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Foreign'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Sci-Fi'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Romance'></tr><br>
-<tr> <input type ="submit" name="button_clicked"value='Fantasy'></tr><br>
+<%@page import="java.io.*" %>
+<%@page import="java.sql.*" %>
+<%@page import="javax.servlet.*"%>
+<%@page import="java.util.*"%>
+<%@page import="java.lang.Object.*"%>
+<%@page import="java.net.URLEncoder"%>
+<%Class.forName("com.mysql.jdbc.Driver"); %>
+<%@page import="package_test.*" %>
+<%int id=0,prev_id=1; %>
+<%
+String title = "";
+String year = "";
+String director = "";
+String star_firstname = "";
+String star_lastname = "";
+%>
+<%
 
-</table>
-</form>
+//PrintWriter out = response.getWriter();
+	Connection test_connection = DriverManager
+			.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", Declarations.username, Declarations.password);
+		Statement select = test_connection.createStatement();
+		ArrayList<String> x =  new ArrayList<String>();
+		String query_genres = "select name from genres";
+		ResultSet all_genres = select.executeQuery(query_genres);
+		while(all_genres.next()){
+			x.add(all_genres.getString(1));
+		}
+		
+		Iterator <String> iterating = x.iterator(); 
+		
+		%>
+
+		<table border=1 cellpadding=1>
+
+		<th>List of genres</th>
+        <% while(iterating.hasNext()){%>
+        			<% String entry = iterating.next();%>
+        <%id= 1;%>
+        
+        <%String encoded_entry = URLEncoder.encode(entry);%>
+		<td><a href= "display_genres.jsp?button_clicked=<%=encoded_entry%>&page_number=1" ><%=entry%></a></td>
+
+
+		<tr>
+		<%}%>
+        </table>
+		
+		
+
+%>
 </body>
-</html>	
+</html>

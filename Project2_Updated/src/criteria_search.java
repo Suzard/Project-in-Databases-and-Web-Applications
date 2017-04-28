@@ -109,8 +109,8 @@ public class criteria_search extends HttpServlet {
         System.out.println("Search requested : " + val);
         
         
-		if(val.equals("search")) response.sendRedirect("display_list.jsp?display_count=10");
-		else if(val.equals("browse")) response.sendRedirect("browse_movies.jsp");
+		if(val.equals("search")) response.sendRedirect("display_list.jsp?display_count=5&page_tmp=1");
+		else if(val.equals("browse")) response.sendRedirect("browse_criteria.jsp");
 //        RequestDispatcher rd=request.getRequestDispatcher("display_list.jsp");  
 //        rd.forward(request, response);
 		
