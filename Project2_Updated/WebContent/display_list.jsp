@@ -10,27 +10,48 @@
 <title>Insert title here</title>
 </head>
 <body>
+
+<%@page import="java.io.*" %>
+<%@page import="java.sql.*" %>
+<%@page import="javax.servlet.*"%>
+<%@page import="java.util.*"%> 
+<%@page import="package_test.*" %>
+<%@page import="java.text.*" %>
+<%Class.forName("com.mysql.jdbc.Driver"); %>
+<%int id=0,prev_id=1,count=0, counter=0,counter1=0;%>
+<%
+String title=Declarations.title, director=Declarations.director, star_firstname=Declarations.star_firstname, 
+		star_lastname=Declarations.star_lastname, query_movies="", query_movies_duplicate="",year="",
+		page_sort_by=Declarations.page_sort_by, 
+		page_sort_order=Declarations.page_sort_order;//year=Declarations.year;
+
+Integer display_count = Declarations.display_count;
+Integer page_number=Declarations.page_number, page_tmp=Declarations.page_tmp;
+int start=0;
+if(request.getParameter("year")!=null){
+year= request.getParameter("year");
+}%>
 <div><%out.print("Number of results to be displayed on Page"); %>&nbsp;	
-<a href="display_list.jsp?display_count=5">5</a> &nbsp;
-<a href="display_list.jsp?display_count=10">10</a> &nbsp;
-<a href="display_list.jsp?display_count=15">15</a> &nbsp;
-<a href="display_list.jsp?display_count=20">20</a> &nbsp;
-<a href="display_list.jsp?display_count=25">25</a> &nbsp;
-<a href="display_list.jsp?display_count=30">30</a> &nbsp;
+<a href="display_list.jsp?display_count=5&year=<%=year%>">5</a> &nbsp;
+<a href="display_list.jsp?display_count=10&year=<%=year%>">10</a> &nbsp;
+<a href="display_list.jsp?display_count=15&year=<%=year%>">15</a> &nbsp;
+<a href="display_list.jsp?display_count=20&year=<%=year%>">20</a> &nbsp;
+<a href="display_list.jsp?display_count=25&year=<%=year%>">25</a> &nbsp;
+<a href="display_list.jsp?display_count=30&year=<%=year%>">30</a> &nbsp;
 </div>
 
 <div>
 <%out.println("&nbsp;Sort By :");%>
-<a href="display_list.jsp?sort_by=year">YEAR</a>
-<a href="display_list.jsp?sort_by=title">TITLE</a>
-<a href="display_list.jsp?sort_by=id">ID</a>
+<a href="display_list.jsp?sort_by=year&page_tmp=<%=page_tmp%>&display_count=<%=display_count%>">YEAR</a>
+<a href="display_list.jsp?sort_by=title&page_tmp=<%=page_tmp%>&display_count=<%=display_count%>">TITLE</a>
+<a href="display_list.jsp?sort_by=id&page_tmp=<%=page_tmp%>&display_count=<%=display_count%>">ID</a>
 &nbsp;&nbsp;&nbsp;&nbsp;
-<a href="display_list.jsp?sort_order=asc">Ascending</a>
-<a href="display_list.jsp?sort_order=desc">Descending</a>
+<a href="display_list.jsp?sort_order=asc&page_tmp=<%=page_tmp%>&display_count=<%=display_count%>">Ascending</a>
+<a href="display_list.jsp?sort_order=desc&page_tmp=<%=page_tmp%>&display_count=<%=display_count%>">Descending</a>
 </div>
 
 
-<form method="post" action="display_list.jsp?display_count=10">
+<form method="post" action="display_list.jsp?display_count=5&page_tmp=1">
 <table>
 <tr>Title<input type="text" name="title"></tr><br>
 <tr> Year <input type="text" name="year"> </tr><br>
@@ -41,28 +62,20 @@
 
 </table>
 </form>
-<%@page import="java.io.*" %>
-<%@page import="java.sql.*" %>
-<%@page import="javax.servlet.*"%>
-<%@page import="java.util.*"%> 
-<%@page import="package_test.*" %>
-<%Class.forName("com.mysql.jdbc.Driver"); %>
-<%int id=0,prev_id=1,count=0, counter=0,counter1=0;%>
+<%-- <%out.println("Page Number Initial : "+ Declarations.page_number); %> --%>
+<%out.println("Display_count : "+ Declarations.display_count); %>
+<%out.println("Display Count Pagination : "+ Declarations.display_count_pagination); %>
+<%out.println("Start Pagination : "+ Declarations.start_pagination); %>
+
 <%
-String title=Declarations.title, director=Declarations.director, star_firstname=Declarations.star_firstname, 
-		star_lastname=Declarations.star_lastname, query_movies="", page_sort_by=Declarations.page_sort_by, 
-		page_sort_order=Declarations.page_sort_order, year=Declarations.year;
-
-int display_count = Declarations.display_count;
-
-if(request.getParameter("year") != null){
+/* if(request.getParameter("year") != null){
 	year = request.getParameter("year");
 	Declarations.year = year;
 	out.println("year in the box :" + year);
 }else if (request.getParameter("year")==null){
 	year= Declarations.year;
 	out.println("year in the boxnull:" + year);
-}
+} */
 	if(request.getParameter("title") !=null){
 	title = request.getParameter("title");
 	Declarations.title=title;
@@ -105,7 +118,9 @@ if(request.getParameter("year") != null){
 		page_sort_order=Declarations.page_sort_order;
 	}
 	
-	/* if(request.getParameter("display_count")!=null){
+	
+	
+	/*  if(request.getParameter("display_count")!=null){
 	display_count= Declarations.display_count;
 	Declarations.display_count = display_count;
 	} */
@@ -117,9 +132,49 @@ if(request.getParameter("display_count") != null){
 } else if(request.getParameter("display_count")==null){
 	display_count = Declarations.display_count;
 }}
+	
 catch(NumberFormatException e){
 /* 	e.printtrace(); */
 }
+	
+	/* if(request.getParameter("page_number")!=null){
+		page_number = Integer.parseInt(request.getParameter("page_number"));
+		Declarations.page_number=page_number;
+	}else if(request.getParameter("page_number")!=null){
+		page_number=Declarations.page_number;
+	} */
+	
+
+	if(request.getParameter("next")!=null){
+		page_tmp=Integer.parseInt(request.getParameter("next"))+1;
+		Declarations.page_tmp = page_tmp;
+		page_number=(page_tmp-1)*display_count;
+		Declarations.page_number=page_number;
+		/* out.println("Current Page Number :" + (page_tmp-1) ); */
+		//Declarations.page_number=page_number;
+		
+	}
+	 if(request.getParameter("prev")!=null){
+		if(page_number-display_count>=0)
+		{
+		page_tmp=Integer.parseInt(request.getParameter("prev"))-1;
+		Declarations.page_tmp = page_tmp;
+		page_number=(page_tmp-1)*display_count;
+		Declarations.page_number=page_number;
+	/* 	out.println("Current Page Number : " + (page_tmp+1));  */
+		//Declarations.page_number=page_number;
+		}}
+		
+		if(request.getParameter("page_tmp")!=null){
+			page_tmp=Integer.parseInt(request.getParameter("page_tmp"));
+			Declarations.page_tmp = page_tmp;
+			page_number=(page_tmp-1)*display_count;
+			Declarations.page_number=page_number;
+			
+		}
+		
+	
+	//page_number = (page_number-1)*display_count;
 out.println("Results Per page:" + "   " + display_count);%>&nbsp;&nbsp;
 <%out.println("Results Sort By:" + "  " + page_sort_by);%>&nbsp; &nbsp;
 <%out.println("Results Sort Order:" + "  " + page_sort_order);%>&nbsp; &nbsp;
@@ -140,12 +195,15 @@ try {
 	else {
 		
 		Map<Integer, ArrayList<Object>> data = new LinkedHashMap<Integer, ArrayList<Object>>();
+		ArrayList<Integer> list_movies = new ArrayList<Integer>();
+		ArrayList<Integer> list_movies_duplicate = new ArrayList<Integer>();
 		
 		Statement select_movies = test_connection.createStatement();
+		Statement select_movies_duplicate = test_connection.createStatement();
 		Statement select_movies_main = test_connection.createStatement();
 		Statement select_stars = test_connection.createStatement();
 		Statement select_genres = test_connection.createStatement();
-		System.out.println("Year : " + year);
+		//System.out.println("Year : " + year);
 		//if(request.getParameter("year") !=null && year.length()!=0)
 		if(request.getParameter("year")!= null && request.getParameter("year")!= "")
 		{
@@ -162,12 +220,22 @@ try {
 				+ "and stars.last_name like '%" + star_lastname + "%' ) "
 				+ "group by movies.id "
 				+ "order by movies." + page_sort_by+" "+page_sort_order
-				+ " limit 0," + display_count ;
+			 	 + " limit " + page_number+","+display_count ; 
+		
+		query_movies_duplicate = "select movies.id from ((stars_in_movies inner join movies on stars_in_movies.movie_id=movies.id) "
+				+ "inner join stars on stars.id=stars_in_movies.star_id) "
+				+ "where movies.year = " + year +""
+				 + " and movies.director like '%" + director + "%" + "' "
+				+ "and (movies.title like '%" + title + "%" + "') "
+				+ "and (stars.first_name like '%" + star_firstname + "%" + "' "
+				+ "and stars.last_name like '%" + star_lastname + "%' ) "
+				+ "group by movies.id "
+				+ "order by movies." + page_sort_by+" "+page_sort_order;
 		System.out.println("Hello 2");
 		}
-		  else if(Declarations.year!=null && Declarations.year!="")
+		   /* else if(Declarations.year!=null && Declarations.year!="")
 		{
-			 year = Declarations.year;
+			 String year = Declarations.year;
 			out.println("It went inside");
 		
 		out.println("Year:  " + year);
@@ -181,9 +249,9 @@ try {
 				+ "and stars.last_name like '%" + star_lastname + "%' ) "
 				+ "group by movies.id "
 				+ "order by movies." + page_sort_by+" "+page_sort_order
-				+ " limit 0," + display_count;
+		 		+ " limit " + page_number+","+display_count ; 
 		System.out.println("Hello 2");
-		}  else{
+		} */   else{
 			System.out.println("Hello 3");
 			query_movies = "select movies.id from ((stars_in_movies inner join movies on  stars_in_movies.movie_id=movies.id) "
 					+ "inner join stars on stars.id=stars_in_movies.star_id) "
@@ -193,21 +261,42 @@ try {
 					+ "and stars.last_name like '%" + star_lastname + "%' ) "
 					+ " group by movies.id"
 					+ " order by movies." + page_sort_by+" "+page_sort_order
-					+ " limit 0," + display_count ; 
+					+ " limit " + page_number +","+ display_count ; 
+			
+			query_movies_duplicate = "select movies.id from ((stars_in_movies inner join movies on  stars_in_movies.movie_id=movies.id) "
+					+ "inner join stars on stars.id=stars_in_movies.star_id) "
+				 	 + " where movies.director like '%" + director + "%" + "' "
+					+ "and (movies.title like '%" + title + "%" + "') "
+					+ "and (stars.first_name like '%" + star_firstname + "%" + "' "
+					+ "and stars.last_name like '%" + star_lastname + "%' ) "
+					+ " group by movies.id"
+					+ " order by movies." + page_sort_by+" "+page_sort_order;
+					
 			System.out.println("Hello 4");
 		}
 				
 		System.out.println("Query_movies : " + query_movies);
 		ResultSet result_movies = select_movies.executeQuery(query_movies);
+		ResultSet result_movies_duplicate = select_movies_duplicate.executeQuery(query_movies_duplicate);
 		
-		while(result_movies.next())
+		while (result_movies.next()){
+			list_movies.add(result_movies.getInt("id"));
+		}
+		while (result_movies_duplicate.next()){
+			list_movies_duplicate.add(result_movies_duplicate.getInt("id"));
+		}
+		System.out.println("List : " + list_movies);
+
+		
+		/* while(result_movies.next()) */
+		for(int movies_id:list_movies)
 		{	
 
 		ArrayList<String> genre_list = new ArrayList<String>();
 		ArrayList<Object> final_list =  new ArrayList<Object>();
 		ArrayList<Object> star_list = new ArrayList<Object>();
 		
-		String query_movies_main = "select * from movies where movies.id =" + result_movies.getInt("id");
+		String query_movies_main = "select * from movies where movies.id =" + movies_id ;//result_movies.getInt("id");
 		ResultSet result_movies_main = select_movies_main.executeQuery(query_movies_main);
 		System.out.println("Query_movies_main : " + query_movies_main);
 		while(result_movies_main.next()){
@@ -246,7 +335,8 @@ try {
 				final_list.add(genre_list);
 				final_list.add(star_list);
 				
-				data.put(result_movies.getInt("id"), final_list);
+				//data.put(result_movies.getInt("id"), final_list);
+				data.put(movies_id, final_list);
 		}}	
 		//System.out.println("Final List" + data);
 		Iterator <Map.Entry<Integer, ArrayList<Object>>> iterator_map = data.entrySet().iterator();
@@ -279,8 +369,32 @@ try {
 	     <% //iterator_map.remove(); 
 	    }%>    </table>
 	    
+	    <%
+	    float size1 =list_movies.size()/display_count;
+		out.print("size =" + list_movies.size());
+		out.print("size1 =" + size1);
+		
+		int total_pagination_pages =  list_movies_duplicate.size()/display_count;
+		if((list_movies_duplicate.size()%display_count)!=0) {total_pagination_pages=total_pagination_pages+1;}
+		out.println("Pagination Pages : " + total_pagination_pages);
+		out.println("List size : " + list_movies_duplicate.size());%>
+		
+		<%if(page_tmp>1) {%>
+		<a href="display_list.jsp?display_count=<%=display_count%>&page_tmp=<%=page_tmp-1%>&year=<%=year%>">PREV</a>&nbsp;&nbsp;
+		<%} %>
+		<%for(int m=1;m<=total_pagination_pages;m++){%>
+			<a href="display_list.jsp?page_tmp=<%=m%>&display_count=<%=display_count%>&year=<%=year%>"><%=m%></a>
+		<%}%>&nbsp;&nbsp;
+		<%out.println("Page Number" + page_tmp); %>
+		<%out.println("Page tmp*display_count" + page_tmp*display_count); %>
+		<%out.println("Page Number" + list_movies_duplicate.size()); %>
+		<% if(page_tmp*display_count<list_movies_duplicate.size()){%>
+	     <a href="display_list.jsp?page_tmp=<%=page_tmp+1%>&display_cout=<%=display_count %>&year=<%=year%>">NEXT</a>
+	     <%} %>
 	    
-	<%}}
+	    
+	    
+<%}}
 catch (Exception e) {
 	System.out.println(e.getMessage());
 }

@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form method="post" action="display_list.jsp?display_count=10">
+<form method="post" action="display_list.jsp?display_count=10&page_tmp=1">
 <table>
 <tr>Title<input type="text" name="title"></tr><br>
 <tr> Year <input type="text" name="year"> </tr><br>
