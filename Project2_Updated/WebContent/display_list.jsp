@@ -402,7 +402,19 @@ try {
 	 <a href="star_file.jsp?Star=<%=encoded_firstname%>&Last=<%=encoded_lastname%>"><%=splitting[0]+" " +splitting[1]%></a>  
 		<%-- <%=value_list.get(5).toString()%> --%>
 		<%} %></td>
+		<td>
 		
+		<%String cart_url="servlet_cart?cart_movie_id=" + entry_list.getKey().toString() + "&year=" + year +
+							"&title=" + title + "&director=" + director + "&star_firstname=" + star_firstname + 
+							"&star_lastname=" + star_lastname + "&sort_by=" + page_sort_by + "&sort_order=" + page_sort_order;%>
+
+		
+		<a href =<%=cart_url%>>add to cart</a>
+		<form method="post" action=<%=cart_url%>>
+		<input type="number" name ="quantity">
+		<input type="submit" value="Add to Cart">
+		</form>
+		</td>
 	    <tr>
 	
 	     <% 

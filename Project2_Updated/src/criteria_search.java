@@ -38,7 +38,8 @@ public class criteria_search extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		//doPost(request,response);
 	}
 
 	/**
@@ -104,8 +105,11 @@ public class criteria_search extends HttpServlet {
 //        out.println("Results Per page:" + "   " + per_page_count);
 //        out.println("Results Sort By:" + "  " + page_sort_by);
 //        out.println("Results Ordered By:  " + page_sort_order);
-//        
-        String val= request.getParameter("criteria_search");
+        String val="";
+        if(request.getParameter("criteria_search")!=null){  
+        	System.out.println("No selection made");
+         val= request.getParameter("criteria_search");
+	}
         System.out.println("Search requested : " + val);
         
         

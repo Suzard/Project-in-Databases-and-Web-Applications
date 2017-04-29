@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.mysql.jdbc.Connection;
 
@@ -40,7 +41,8 @@ public class login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
 	/**
@@ -53,6 +55,13 @@ public class login extends HttpServlet {
 				
 				Connection test_connection = null;
 				String email="",password="";
+				HttpSession session= request.getSession(false);
+				if(session!=null && request.getAttribute("id")!=null)
+				{
+					RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search");
+					dispatcher.forward(request, response);
+				}
+				
 				try {
 				Class.forName("com.mysql.jdbc.Driver");
 				
@@ -81,12 +90,26 @@ public class login extends HttpServlet {
 				
 				if(result_movies.next())
 				{
-					System.out.println("Welcome " + result_movies.getString("email"));
+//					if(request.getSession(false)!=null && request.getAttribute("id")!=null)
+//					{
+//						System.out.println("Session present");
+//						RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search");
+//						test_connection.close();
+//						dispatcher.forward(request, response);
+//					}else if(request.getSession(false)==null && request.getAttribute("id")==null){
+						System.out.println("Session not present");
+						session =  request.getSession(true);
+						session.setAttribute("id", result_movies.getInt("id"));
+						RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search.jsp");
+						test_connection.close();
+						dispatcher.forward(request, response);
+						//response.sendRedirect("criteria_search");
+//					}
+					//response.sendRedirect("criteria_search.jsp");
+					//System.out.println("Welcome " + result_movies.getString("email"));
+					
 				}else{
-//					req.setAttribute("msg", "Invalid login details....");
-//					RequestDispatcher rd = req.getRequestDispatcher("Login.jsp");
-//					con.close();
-//					rd.forward(req, res);
+//	
 					
 					
 					request.setAttribute("error_message", "Please enter the correct credentials");
