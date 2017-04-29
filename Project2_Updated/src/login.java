@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mysql.jdbc.Connection;
 
 import package_test.Declarations;
+
 import java.io.*;
 import java.sql.*;
 import javax.servlet.*;
@@ -60,9 +61,9 @@ public class login extends HttpServlet {
 				
 				if (test_connection == null){
 					System.out.println("Not successful");
-					out.println("Connection not successfull");}
+					System.out.println("Connection not successfull");}
 				else {
-					out.println("Connection Successfull");
+					System.out.println("Connection Successfull");
 				}
 				if(request.getParameter("email")!=null){
 				email = (String) request.getParameter("email");
@@ -74,13 +75,26 @@ public class login extends HttpServlet {
 				
 				Statement select_login = test_connection.createStatement();
 				String query_login= "select * from customers where email='" + email + 
-									"' and password ='" + password + "'" + "limit 1";
+									"' and password ='" + password + "'" + " limit 1";
 				System.out.println(query_login);
 				ResultSet result_movies = select_login.executeQuery(query_login);
 				
-				while(result_movies.next())
+				if(result_movies.next())
 				{
 					System.out.println("Welcome " + result_movies.getString("email"));
+				}else{
+//					req.setAttribute("msg", "Invalid login details....");
+//					RequestDispatcher rd = req.getRequestDispatcher("Login.jsp");
+//					con.close();
+//					rd.forward(req, res);
+					
+					
+					request.setAttribute("error_message", "Please enter the correct credentials");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+					test_connection.close();
+					dispatcher.forward(request,response);
+//					out.println("Invalid credential. Please enter the correct username and password.");
+//					response.sendRedirect("login.jsp");
 				}
 	}
 				 catch (SQLException e) {

@@ -15,5 +15,12 @@
 <tr> <input type ="submit" value="Login"></tr>
 </table>
 </form>
+<%
+if(request.getAttribute("error_message")!=null){
+String error_message = request.getAttribute("error_message").toString(); 
+if(error_message.length()!=0){
+	out.println("Please enter the correct credentials");
+}
+}%>
 </body>
 </html>
