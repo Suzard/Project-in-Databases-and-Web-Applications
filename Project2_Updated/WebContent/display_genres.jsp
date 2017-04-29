@@ -22,17 +22,17 @@
 Integer display_count = 5;
 Integer page_number=1;
 Integer page_number_start = 1;
+Integer checking = (page_number -1)*display_count;
+String encoded_genre_value = request.getParameter("button_clicked");
+String genre_value = URLDecoder.decode(encoded_genre_value);
 if(request.getParameter("display_count")!=null){
 	display_count= Integer.parseInt(request.getParameter("display_count"));
 }
 if(request.getParameter("page_number")!=null){
 	page_number= Integer.parseInt(request.getParameter("page_number"));
-	System.out.println(page_number +" this is page number");
 	page_number_start = (page_number -1)*display_count;
-	System.out.println(page_number_start + "starting here");
 }
-String encoded_genre_value = request.getParameter("button_clicked");
-String genre_value = URLDecoder.decode(encoded_genre_value);
+
 %>
 
 <%-- <div><%out.print("Number of results to be displayed on Page"); %>&nbsp;	 --%>
@@ -50,7 +50,6 @@ String genre_value = URLDecoder.decode(encoded_genre_value);
 	Connection test_connection = DriverManager
 			.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", Declarations.username, Declarations.password);
 	Map<Integer, ArrayList<Object>> data = new LinkedHashMap<Integer, ArrayList<Object>>();
-
 		Statement select = test_connection.createStatement();
 		Statement select2 = test_connection.createStatement();
         Statement select3 = test_connection.createStatement();
@@ -60,7 +59,6 @@ String genre_value = URLDecoder.decode(encoded_genre_value);
         Statement select7 = test_connection.createStatement();
         Statement select8 = test_connection.createStatement();
         Statement select9 = test_connection.createStatement();
-
              int star_id;
              Map<String,String> stars_first_and_last = new HashMap<String, String>();
              String dob;
@@ -143,7 +141,14 @@ String genre_value = URLDecoder.decode(encoded_genre_value);
 				Iterator <Map.Entry<Integer, ArrayList<Object>>> iterating =  data.entrySet().iterator();
      			
 		%>
+		<%if(data.size()==0) {
 
+		String redirectURL = "http://localhost:8080/Project2_Updated/display_genres.jsp?page_number=" + (page_number-1) + "&display_count=" + display_count + "&button_clicked=" + genre_value;
+
+	    response.sendRedirect(redirectURL); 
+
+		}
+	    %>
 		<table border=1 cellpadding=1>
 		<th>Image</th>  
 		<th>ID</th>
@@ -152,7 +157,10 @@ String genre_value = URLDecoder.decode(encoded_genre_value);
 		<th>Director</th>
 		<th>List of genres</th>
 		<th>List of Stars</th>
+		
         <% while(iterating.hasNext()){%>
+
+        			
         			<% Map.Entry<Integer, ArrayList<Object>> entry = iterating.next();%>
 					<%ArrayList<Object> e = entry.getValue();%>
 					<%ArrayList<String> star_listing = (ArrayList<String>) e.get(5); %>
@@ -166,12 +174,12 @@ String genre_value = URLDecoder.decode(encoded_genre_value);
 		<td><%=Integer.parseInt(entry.getKey().toString())%></td>
 		<% String q = e.get(0).toString();%>
 		<%String encodedString = URLEncoder.encode(q, "UTF-8"); %>		
-		<td><a href= "movie_file.jsp?Movie=<%=encodedString%>" ><%=q%></a></td> <!-- title -->
+		<td><a href= "movie_file.jsp?Movie=<%=q%>" ><%=q%></a></td> <!-- title -->
 		<td><%=e.get(1).toString()%></td> <!-- year -->
 		<td><%=e.get(2).toString()%></td> <!-- director -->
 		<td><% while(iterate_genre.hasNext()){ %>
 			<%String encoded_name_v = iterate_genre.next(); %>	
-			<%String genre_name_v = URLEncoder.encode(encoded_name_v, "UTF-8"); %>
+			<%String genre_name_v = URLEncoder.encode(encoded_name_v); %>
 		
 		<a href= "display_genres.jsp?button_clicked=<%=genre_name_v%>&page_number=<%=page_number%>&display_count=<%=display_count%>" ><%=encoded_name_v%></a>
 		<% }%>
@@ -190,13 +198,12 @@ String genre_value = URLDecoder.decode(encoded_genre_value);
 		
 		
 
-%>
+
 <% if(page_number >1){%>
  <a href="display_genres.jsp?page_number=<%=page_number-1%>&display_count=<%=display_count %>&button_clicked=<%=genre_value%>">PREV</a>
  <% }%>
- <% System.out.println(data.size());%>
-<%-- <% if(page_number*display_count < data.size()){%> --%>
+
  <a href="display_genres.jsp?page_number=<%=page_number+1%>&display_count=<%=display_count %>&button_clicked=<%=genre_value%>">NEXT</a> 
-<%-- <%} %> --%>
+
 </body>
 </html>
