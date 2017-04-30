@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -52,7 +53,7 @@ public class login extends HttpServlet {
 		// TODO Auto-generated method stub
 				//doGet(request, response);
 				PrintWriter out = response.getWriter();
-				
+				ArrayList<Object> session_local_details = new ArrayList<Object>();
 				Connection test_connection = null;
 				String email="",password="";
 				HttpSession session= request.getSession(false);
@@ -89,7 +90,13 @@ public class login extends HttpServlet {
 				ResultSet result_movies = select_login.executeQuery(query_login);
 				
 				if(result_movies.next())
-				{
+				{	
+					session_local_details.add(result_movies.getString("id"));
+					session_local_details.add(result_movies.getString("first_name"));
+					session_local_details.add(result_movies.getString("last_name"));
+					session_local_details.add(result_movies.getString("address"));
+					session_local_details.add(result_movies.getString("email"));
+					session_local_details.add(result_movies.getString("password"));
 //					if(request.getSession(false)!=null && request.getAttribute("id")!=null)
 //					{
 //						System.out.println("Session present");
@@ -99,7 +106,9 @@ public class login extends HttpServlet {
 //					}else if(request.getSession(false)==null && request.getAttribute("id")==null){
 						System.out.println("Session not present");
 						session =  request.getSession(true);
-						session.setAttribute("id", result_movies.getInt("id"));
+						session.setAttribute(email,session_local_details);
+						if(!Declarations.session_active.containsKey(session_local_details))
+							Declarations.session_active.put(email, session_local_details);
 						RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search.jsp");
 						test_connection.close();
 						dispatcher.forward(request, response);

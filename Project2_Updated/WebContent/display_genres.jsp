@@ -21,8 +21,11 @@
 
 Integer display_count = 5;
 Integer page_number=1;
-Integer page_number_start = 1;
-Integer checking = (page_number -1)*display_count;
+Integer page_number_start = 0;
+System.out.println(page_number_start +"checking page 1");
+Integer super_temp = 0;
+String sort_by = "year";
+String sort_order = "asc";
 String encoded_genre_value = request.getParameter("button_clicked");
 String genre_value = URLDecoder.decode(encoded_genre_value);
 if(request.getParameter("display_count")!=null){
@@ -32,24 +35,57 @@ if(request.getParameter("page_number")!=null){
 	page_number= Integer.parseInt(request.getParameter("page_number"));
 	page_number_start = (page_number -1)*display_count;
 }
-
+System.out.println(page_number_start +"checking page 2");
+if(request.getParameter("page_number_start")!=null){
+	page_number_start=Integer.parseInt(request.getParameter("page_number_start"));
+	Declarations.page_tmp = page_number_start;
+	super_temp = page_number;
+	page_number=(page_number_start-1)*display_count;
+	Declarations.page_number=page_number;
+	
+}
+if(request.getParameter("sort_by")!=null){
+	sort_by = request.getParameter("sort_by");
+	Declarations.page_sort_by=sort_by;
+}else if(request.getParameter("sort_by")==null){
+	sort_by=Declarations.page_sort_by;
+}
+if(request.getParameter("sort_order")!=null){
+	sort_order = request.getParameter("sort_order");
+	Declarations.page_sort_order=sort_order;
+}else if(request.getParameter("sort_order")==null){
+	sort_order=Declarations.page_sort_order;
+}
 %>
 
 <%-- <div><%out.print("Number of results to be displayed on Page"); %>&nbsp;	 --%>
-<a href="display_genres.jsp?display_count=5&button_clicked=<%=genre_value%>&page_number=<%=page_number%>">5</a> &nbsp;
-<a href="display_genres.jsp?display_count=10&button_clicked=<%=genre_value%>&page_number=<%=page_number%>">10</a> &nbsp;
-<a href="display_genres.jsp?display_count=15&button_clicked=<%=genre_value%>&page_number=<%=page_number%>">15</a> &nbsp;
-<a href="display_genres.jsp?display_count=20&button_clicked=<%=genre_value%>&page_number=<%=page_number%>">20</a> &nbsp;
-<a href="display_genres.jsp?display_count=25&button_clicked=<%=genre_value%>&page_number=<%=page_number%>">25</a> &nbsp;
-<a href="display_genres.jsp?display_count=30&button_clicked=<%=genre_value%>&page_number=<%=page_number%>">30</a> &nbsp;
+<a href="display_genres.jsp?display_count=5&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>">5</a> &nbsp;
+<a href="display_genres.jsp?display_count=10&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>">10</a> &nbsp;
+<a href="display_genres.jsp?display_count=15&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>">15</a> &nbsp;
+<a href="display_genres.jsp?display_count=20&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>">20</a> &nbsp;
+<a href="display_genres.jsp?display_count=25&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>">25</a> &nbsp;
+<a href="display_genres.jsp?display_count=30&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>">30</a> &nbsp;
 <!-- when initially loaded page #=1 -->
+<a href="display_genres.jsp?display_count=<%=display_count%>&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>&sort_by=year">YEAR</a> &nbsp;
+<a href="display_genres.jsp?display_count=<%=display_count%>&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>&sort_by=title">TITLE</a> &nbsp;
 
-<!-- </div> -->
+<a href="display_genres.jsp?display_count=<%=display_count%>&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>&sort_by=id">ID</a> &nbsp;
+
+<a href="display_genres.jsp?sort_order=asc&display_count=<%=display_count%>&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>">Ascending</a> &nbsp;
+<a href="display_genres.jsp?sort_order=desc&display_count=<%=display_count%>&button_clicked=<%=genre_value%>&page_number=<%=page_number%>&page_number_start=<%=page_number_start%>">Descending</a> &nbsp;
+
+
+
 <%
 //PrintWriter out = response.getWriter();
 	Connection test_connection = DriverManager
 			.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", Declarations.username, Declarations.password);
 	Map<Integer, ArrayList<Object>> data = new LinkedHashMap<Integer, ArrayList<Object>>();
+// 	Map<Integer, ArrayList<Object>> data1 = new LinkedHashMap<Integer, ArrayList<Object>>();
+// 	Map<Integer, ArrayList<Object>> data2 = new LinkedHashMap<Integer, ArrayList<Object>>();
+// 		Map<Integer, Integer> sort_by_year =  new LinkedHashMap<Integer, Integer>();
+// 		Map<String, Integer> sort_by_title =  new LinkedHashMap<String, Integer>();
+
 		Statement select = test_connection.createStatement();
 		Statement select2 = test_connection.createStatement();
         Statement select3 = test_connection.createStatement();
@@ -79,14 +115,31 @@ if(request.getParameter("page_number")!=null){
              while(genre_calculating.next()){
             	 genre_v = genre_calculating.getInt(1);
              }
-             String calcing_movies = "select movies_id from genres_in_movies where genre_id = " + genre_v  + " limit " + page_number_start + "," + display_count;;
-             System.out.println(calcing_movies);
-             ResultSet movie_getting = select9.executeQuery(calcing_movies);
-        	 while(movie_getting.next()){
-        		movie_v = movie_getting.getInt(1); 
+			System.out.println(page_number_start+  " query using start");
+			System.out.println(page_number+  " query using page #");
+			
+			System.out.println(display_count+  " query using display_count");
+			String calcing_movies;
+			if(page_number_start <0){
+				page_number_start = 0;
+			}
 
-             String all_movies = "select * from movies where id = " + movie_v;
-             ResultSet all = select.executeQuery(all_movies);
+			
+// 			if(request.getParameter("page_number_start") != null){
+// 				Integer zowi = Integer.parseInt(request.getParameter("page_number_start"));
+// 				if(Integer.parseInt(request.getParameter("page_number_start")) <0){
+// 					zowi = 0;
+// 				}
+			System.out.println(request.getParameter("sort_order"));
+             calcing_movies = "select id,title,year,director,banner_url,trailer_url from (movies inner join genres_in_movies on genres_in_movies.movies_id = movies.id)where genres_in_movies.genre_id like " + genre_v +  " order by " + sort_by + " " + sort_order + " limit " + page_number_start + "," + display_count;
+			System.out.println(calcing_movies);
+
+// 			}
+// 			else{
+// 	             calcing_movies = "select movies_id from genres_in_movies where genre_id = " + genre_v  + " limit " + page_number_start + "," + display_count;
+// 			}
+             ResultSet all = select9.executeQuery(calcing_movies);
+
              while(all.next()){
             	 movie_id = all.getInt(1);
                  ArrayList<Object> list = new ArrayList<Object>();
@@ -119,6 +172,10 @@ if(request.getParameter("page_number")!=null){
                      }
                      star_list.add(full_name);
             	 }
+//             	 System.out.println(star_list + "before");
+//             	 Collections.sort(star_list);
+//             	 System.out.println(star_list + "after");
+
             	 ArrayList<String> genre_list = new ArrayList<String>();
             	 String genre_details = "select genre_id from genres_in_movies where movies_id = " +movie_id;
             	 ResultSet genre_ids = select6.executeQuery(genre_details);
@@ -135,18 +192,26 @@ if(request.getParameter("page_number")!=null){
                	 list.add(star_list);
                	 list.add(genre_list);
                	 data.put(movie_id, list);
+//                	 sort_by_year.put(movie_year,movie_id);
+//                	 sort_by_title.put(movie_title, movie_id);
             	 }
-        	 }
-        	 System.out.println(data);
+
+//         	 System.out.println("Sorting" +data.keySet());
+        	 
+//         	 System.out.println(data);
+// 				SortedSet<Integer> id_keys = new TreeSet<Integer>(data.keySet());
+// 				SortedSet<Integer> year_keys = new TreeSet<Integer>(sort_by_year.keySet());
+// 				SortedSet<String> title_keys = new TreeSet<String>(sort_by_title.keySet());
+// 				Map<Integer, ArrayList<Object>> real_sort = new LinkedHashMap<Integer, ArrayList<Object>>();
 				Iterator <Map.Entry<Integer, ArrayList<Object>>> iterating =  data.entrySet().iterator();
-     			
 		%>
 		<%if(data.size()==0) {
 
-		String redirectURL = "http://localhost:8080/Project2_Updated/display_genres.jsp?page_number=" + (page_number-1) + "&display_count=" + display_count + "&button_clicked=" + genre_value;
-
-	    response.sendRedirect(redirectURL); 
-
+		String redirectURL = "http://localhost:8080/Project2_Updated/display_genres.jsp?page_number=" + 0 + "&display_count=" + display_count + "&button_clicked=" + genre_value + "&page_number_start=" + (page_number_start-display_count);
+// httpResp.sendRedirect(httpReq.getRequestURI());
+		System.out.println("wrong");
+// 	    response.sendRedirect(getRequestURI()); 
+		response.sendRedirect(redirectURL);
 		}
 	    %>
 		<table border=1 cellpadding=1>
@@ -199,11 +264,12 @@ if(request.getParameter("page_number")!=null){
 		
 
 
-<% if(page_number >1){%>
- <a href="display_genres.jsp?page_number=<%=page_number-1%>&display_count=<%=display_count %>&button_clicked=<%=genre_value%>">PREV</a>
+<% if(page_number >1){ //changed href to include page number start%>
+
+ <a href="display_genres.jsp?page_number=<%=page_number-1%>&display_count=<%=display_count %>&button_clicked=<%=genre_value%>&page_number_start=<%=page_number_start-display_count%>">PREV</a>
  <% }%>
 
- <a href="display_genres.jsp?page_number=<%=page_number+1%>&display_count=<%=display_count %>&button_clicked=<%=genre_value%>">NEXT</a> 
+ <a href="display_genres.jsp?page_number=<%=page_number+1%>&display_count=<%=display_count %>&button_clicked=<%=genre_value%>&page_number_start=<%=page_number_start+display_count%>">NEXT</a> 
 
 </body>
 </html>

@@ -1,0 +1,122 @@
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.mysql.jdbc.Connection;
+
+import package_test.Declarations;
+
+/**
+ * Servlet implementation class cart_authenticity_check
+ */
+@WebServlet("/cart_authenticity_check")
+public class cart_authenticity_check extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public cart_authenticity_check() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/html");
+		
+		
+		String first_name= request.getParameter("first_name");
+		String last_name=request.getParameter("last_name");
+		String email = request.getParameter("email");
+	    String date =request.getParameter("date");
+		String credit_card_number = request.getParameter("credit_card_number");
+		int customer_id = 0;
+		
+		out.println("First Name" + first_name);
+		out.println("Last Name" + last_name);
+		out.println("email" + email);
+		out.println("date" + date);
+		out.println("credit_card_number" + credit_card_number);
+		
+		
+		String query_authentication = "select * from creditcards where id='" + credit_card_number + "' "+
+									  "and first_name='" + first_name + "' and last_name = '" + last_name + "' " +
+				                      "and expiration = '" + date + "'" + " limit 1" ;
+		System.out.println(query_authentication);
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			
+				Connection test_connection = (Connection) DriverManager
+						.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", Declarations.username, Declarations.password);
+			
+				if (test_connection == null){
+					System.out.println("Not successful");
+					System.out.println("Connection not successfull");}
+				else {
+					System.out.println("Connection Successfull");
+				}
+				
+				Statement select_auth_check = test_connection.createStatement();
+				Statement select_get_id = test_connection.createStatement();
+				ResultSet result_movies = select_auth_check.executeQuery(query_authentication);
+				
+				
+				if(result_movies.next())
+				{
+					String query_id = "select * from customers where first_name='" + first_name + "' and last_name= '" + last_name +"'";
+					System.out.println("query_id :" + query_id);
+					ResultSet result_customer_id = select_get_id.executeQuery(query_id);
+							if(result_customer_id.next()){
+								customer_id = result_customer_id.getInt("id");
+							}
+					
+					request.setAttribute("first_name", first_name);
+					request.setAttribute("last_name", last_name);
+					request.setAttribute("credit_card_id", credit_card_number);
+					request.setAttribute("id", customer_id);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("confirmation_page.jsp");
+					test_connection.close();
+					dispatcher.forward(request, response);
+							
+							
+				out.println("Valid Customer");
+				}else{
+					out.println("Invalid Customer");
+				}
+		
+	}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+}}

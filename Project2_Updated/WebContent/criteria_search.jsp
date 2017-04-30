@@ -9,6 +9,12 @@
 <body>
 <!-- <form method="post" action="display_list.jsp?display_count=5&page_tmp=1"> -->
 <form method="post" action="criteria_search">
+<input type="submit" name="Checkout" value="Checkout">
+</form>
+<br>
+<br>
+<br>
+<form method="post" action="criteria_search">
 <table>
 
 <tr><input type="radio" name="criteria_search" value="search" >Search</tr>

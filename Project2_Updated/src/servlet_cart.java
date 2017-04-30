@@ -57,7 +57,7 @@ public class servlet_cart extends HttpServlet {
 		if(request.getParameter("quantity")!=null){
 		quantity = Integer.parseInt(request.getParameter("quantity"));
 		}
-		HashMap<Integer,Integer> cart_local = Declarations.cart;
+
 		if(request.getParameter("cart_movie_id")!=null){
 
 		if(Declarations.cart.containsKey(movie_id)){
