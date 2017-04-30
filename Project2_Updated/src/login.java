@@ -57,7 +57,7 @@ public class login extends HttpServlet {
 				Connection test_connection = null;
 				String email="",password="";
 				HttpSession session= request.getSession(false);
-				if(session!=null && request.getAttribute("id")!=null)
+				if(session!=null && request.getAttribute("customer_id")!=null)
 				{
 					RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search");
 					dispatcher.forward(request, response);
@@ -91,7 +91,7 @@ public class login extends HttpServlet {
 				
 				if(result_movies.next())
 				{	
-					session_local_details.add(result_movies.getString("id"));
+					session_local_details.add(result_movies.getInt("id"));
 					session_local_details.add(result_movies.getString("first_name"));
 					session_local_details.add(result_movies.getString("last_name"));
 					session_local_details.add(result_movies.getString("address"));
@@ -106,8 +106,8 @@ public class login extends HttpServlet {
 //					}else if(request.getSession(false)==null && request.getAttribute("id")==null){
 						System.out.println("Session not present");
 						session =  request.getSession(true);
-						session.setAttribute(email,session_local_details);
-						if(!Declarations.session_active.containsKey(session_local_details))
+						session.setAttribute("customer_id",session_local_details);
+						if(!Declarations.session_active.containsKey(email))
 							Declarations.session_active.put(email, session_local_details);
 						RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search.jsp");
 						test_connection.close();

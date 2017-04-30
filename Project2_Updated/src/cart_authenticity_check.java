@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,10 +14,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.mysql.jdbc.Connection;
 
 import package_test.Declarations;
+import package_test.*;
+import javax.servlet.http.*;
+import java.util.*;
+import java.sql.*;
 
 /**
  * Servlet implementation class cart_authenticity_check
@@ -85,7 +91,10 @@ public class cart_authenticity_check extends HttpServlet {
 				Statement select_auth_check = test_connection.createStatement();
 				Statement select_get_id = test_connection.createStatement();
 				ResultSet result_movies = select_auth_check.executeQuery(query_authentication);
-				
+				ArrayList<Object> session_local_details = new ArrayList<Object>();
+				HttpSession session = request.getSession(false);
+				ArrayList<Object> list_customers =  (ArrayList<Object>) session.getAttribute("customer_id");
+				System.out.println("The list is " + list_customers);
 				
 				if(result_movies.next())
 				{
@@ -99,13 +108,15 @@ public class cart_authenticity_check extends HttpServlet {
 					request.setAttribute("first_name", first_name);
 					request.setAttribute("last_name", last_name);
 					request.setAttribute("credit_card_id", credit_card_number);
-					request.setAttribute("id", customer_id);
+					//request.setAttribute("id", list_customers.get(0));
 					RequestDispatcher dispatcher = request.getRequestDispatcher("confirmation_page.jsp");
 					test_connection.close();
 					dispatcher.forward(request, response);
 							
 							
 				out.println("Valid Customer");
+				//out.println(list_customers.get(0));
+						
 				}else{
 					out.println("Invalid Customer");
 				}

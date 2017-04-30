@@ -11,11 +11,11 @@
  <% String first_name = (String) request.getAttribute("first_name");
 	String  last_name = request.getAttribute("last_name").toString();
 	String credit_card = request.getAttribute("credit_card_id").toString();
-	int customer_id =  (int) request.getAttribute("id");
+	//int customer_id =  (int) request.getAttribute("id");
 	out.println("First Name :" + first_name);
 	out.println("Last Name :" + last_name);
 	out.println("Credit Card Number :" + credit_card);
-	out.println("Customer Id :" + customer_id);
+	//out.println("Customer Id :" + customer_id);
 	
 %>
 </table>

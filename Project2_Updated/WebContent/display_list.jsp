@@ -344,6 +344,9 @@ try {
 		//System.out.println("Final List" + data);
 		Iterator <Map.Entry<Integer, ArrayList<Object>>> iterator_map = data.entrySet().iterator();
 		%>
+		<form method="post" action="cart_authenticity_check.jsp">
+		<input type="submit" name="submit" value="Checkout">
+		</form>
 		<table border=1 cellpadding=1>
 			<th>Image</th>
 			<th>ID</th>
