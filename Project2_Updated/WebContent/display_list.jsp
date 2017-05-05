@@ -356,7 +356,7 @@ try {
 		    		 // System.out.println("Hello in beta");
 						int demon = page_number-1;
 						if(demon <=0 ){
-							demon = 1;
+							demon = 0;
 						}
 						query_movies = "select movies.id from ((stars_in_movies inner join movies on  stars_in_movies.movie_id=movies.id) "
 								+ "inner join stars on stars.id=stars_in_movies.star_id) "

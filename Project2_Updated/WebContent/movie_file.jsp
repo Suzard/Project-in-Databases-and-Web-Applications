@@ -191,8 +191,5 @@ String star_lastname = "";
 		<%}%>
         </table>
 		
-		
-
-%>
 </body>
 </html>
