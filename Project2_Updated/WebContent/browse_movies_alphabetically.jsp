@@ -17,19 +17,33 @@
 
 <%Class.forName("com.mysql.jdbc.Driver"); %>
 <%int id=0,prev_id=1; %>
+
+<form action="confirmation_page.jsp">
+<input type="submit" value="checkout">
+</form>
+
+<form action="cart_authenticity_check.jsp">
+<input type="submit" value="Proceed to Checkout">
+</form>
+
+<form action="logout.jsp">
+<input type="submit" value="logout">
+</form>
+
+
 <table border=1 cellpadding=1>
 <table border=1 cellpadding=1>
 
-<th>List of genres</th>
+<th>ALPHABETICAL ORDER</th>
 <% for(char alphabet = 'A'; alphabet <= 'Z';alphabet++) {%>
 <%String str = String.valueOf(alphabet); %>
-<td><a href= "display_alphabetically.jsp?button_clicked=<%=str%> " ><%=str%></a></td>
+<td><a href= "display_list.jsp?button_clicked=<%=str%> " ><%=str%></a></td>
 <%-- 		<td><a href= "movie_file.jsp?Movie=<%=movie_t%>" ><%=e.get(0).toString()%></a> --%>
 
 <%id= 1;%>
 
 <%}%>
-<td><a href= "display_alphabetically.jsp?button_clicked=Number" >number_title_start</a></td>
+<td><a href= "display_list.jsp?button_clicked_n=Number" >number_title_start</a></td>
 
 </table>	
 </table>

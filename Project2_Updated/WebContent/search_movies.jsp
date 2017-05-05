@@ -7,6 +7,18 @@
 <title>Insert title here</title>
 </head>
 <body>
+
+		<form action="confirmation_page.jsp">
+<input type="submit" value="checkout">
+</form>
+
+<form action="cart_authenticity_check.jsp">
+<input type="submit" value="Proceed to Checkout">
+</form>
+
+<form action="logout.jsp">
+<input type="submit" value="logout">
+</form>
 <form method="post" action="display_list.jsp?display_count=10&page_tmp=1">
 <table>
 <tr>Title<input type="text" name="title"></tr><br>

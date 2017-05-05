@@ -7,6 +7,20 @@
 <title>Insert title here</title>
 </head>
 <body>
+
+<form action="confirmation_page.jsp" method="post">
+<input type="submit" value="checkout">
+</form>
+
+<form action="cart_authenticity_check.jsp" method = "post">
+<input type="submit" value="Proceed to Checkout">
+</form>
+
+<form action="logout.jsp" method ="post">
+<input type="submit" value="logout">
+</form>
+
+
 <form method="post" action="browse_criteria">
 <table>
 

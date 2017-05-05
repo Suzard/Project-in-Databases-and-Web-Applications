@@ -1,4 +1,4 @@
-
+	
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.mysql.jdbc.Connection;
 
-import package_test.Declarations;
+import package_test.*;
 
 import java.io.*;
 import java.sql.*;
@@ -106,9 +106,13 @@ public class login extends HttpServlet {
 //					}else if(request.getSession(false)==null && request.getAttribute("id")==null){
 						System.out.println("Session not present");
 						session =  request.getSession(true);
+						if(session!=null) System.out.println("Session Created on Login");
 						session.setAttribute("customer_id",session_local_details);
-						if(!Declarations.session_active.containsKey(email))
-							Declarations.session_active.put(email, session_local_details);
+						session.setAttribute("cart", new cart_main());
+						if(!Declarations.session_active.containsKey(session))
+							Declarations.session_active.put(session, session_local_details);
+						if(!Declarations.cart.containsKey(session))
+							Declarations.cart.put(session, new cart_main());
 						RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search.jsp");
 						test_connection.close();
 						dispatcher.forward(request, response);

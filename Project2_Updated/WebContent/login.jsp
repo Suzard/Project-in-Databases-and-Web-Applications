@@ -7,11 +7,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form method="post" action="login">
+<br><br><br><br><br>
+<form method="post" action="login" align="center">
 
 <table>
 <tr>Name<input type="text" name="email"></tr>
-<tr> Password <input type="text" name="password"> </tr><br>
+<tr> Password <input type="password" name="password" > </tr><br><br><br>
 <tr> <input type ="submit" value="Login"></tr>
 </table>
 </form>

@@ -19,6 +19,18 @@
 <%Class.forName("com.mysql.jdbc.Driver"); %>
 <%@page import="package_test.*" %>
 <%int id=0,prev_id=1; %>
+
+<form action="confirmation_page.jsp">
+<input type="submit" value="checkout">
+</form>
+
+<form action="cart_authenticity_check.jsp">
+<input type="submit" value="Proceed to Checkout">
+</form>
+
+<form action="logout.jsp">
+<input type="submit" value="logout">
+</form>
 <%
 String title = "";
 String year = "";
@@ -51,7 +63,7 @@ String star_lastname = "";
         <%id= 1;%>
         
         <%String encoded_entry = URLEncoder.encode(entry);%>
-		<td><a href= "display_genres.jsp?button_clicked=<%=encoded_entry%>&page_number=1" ><%=entry%></a></td>
+		<td><a href= "display_list.jsp?button_clicked_g=<%=encoded_entry%>&page_number=1" ><%=entry%></a></td>
 
 
 		<tr>

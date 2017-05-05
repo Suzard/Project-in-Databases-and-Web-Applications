@@ -19,8 +19,8 @@ public static String director="";
 public static String page_sort_by="id";
 public static String page_sort_order="asc";
 public static final String username="root";
-public static final String password="aruna@10";
-public static HashMap<Integer,Integer> cart= (HashMap<Integer, Integer>) new LinkedHashMap<Integer,Integer>();
-public static HashMap<Object, Object> session_active = (HashMap<Object, Object>)new LinkedHashMap<Object,Object>();
+public static final String password="root";
+public static HashMap<Object,Object> cart=  (HashMap<Object,Object>) new LinkedHashMap<Object,Object>();
+public static HashMap<Object, Object> session_active = (HashMap<Object, Object>) new LinkedHashMap<Object,Object>();
 
 }

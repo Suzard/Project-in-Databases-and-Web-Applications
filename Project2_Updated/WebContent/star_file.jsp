@@ -99,9 +99,22 @@ String star_lastname = "";
 		 data.put(s_id, list);
 		Iterator <Map.Entry<Integer, ArrayList<Object>>> iterating =  data.entrySet().iterator();
 
-		System.out.println(data);
+		//System.out.println(data);
 %>
 	
+			<form action="confirmation_page.jsp">
+<input type="submit" value="checkout">
+</form>
+
+<form action="cart_authenticity_check.jsp">
+<input type="submit" value="Proceed to Checkout">
+</form>
+
+<form action="logout.jsp">
+<input type="submit" value="logout">
+</form>
+
+
 		<table border=1 cellpadding=1>
 		<th>ID</th>
 		<th>Name</th>

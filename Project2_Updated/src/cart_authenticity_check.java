@@ -45,6 +45,7 @@ public class cart_authenticity_check extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request,response);
 	}
 
 	/**
@@ -62,12 +63,7 @@ public class cart_authenticity_check extends HttpServlet {
 	    String date =request.getParameter("date");
 		String credit_card_number = request.getParameter("credit_card_number");
 		int customer_id = 0;
-		
-		out.println("First Name" + first_name);
-		out.println("Last Name" + last_name);
-		out.println("email" + email);
-		out.println("date" + date);
-		out.println("credit_card_number" + credit_card_number);
+
 		
 		
 		String query_authentication = "select * from creditcards where id='" + credit_card_number + "' "+
@@ -90,13 +86,14 @@ public class cart_authenticity_check extends HttpServlet {
 				
 				Statement select_auth_check = test_connection.createStatement();
 				Statement select_get_id = test_connection.createStatement();
-				ResultSet result_movies = select_auth_check.executeQuery(query_authentication);
+				ResultSet result_authentication = select_auth_check.executeQuery(query_authentication);
 				ArrayList<Object> session_local_details = new ArrayList<Object>();
+				
 				HttpSession session = request.getSession(false);
 				ArrayList<Object> list_customers =  (ArrayList<Object>) session.getAttribute("customer_id");
 				System.out.println("The list is " + list_customers);
 				
-				if(result_movies.next())
+				if(result_authentication.next())
 				{
 					String query_id = "select * from customers where first_name='" + first_name + "' and last_name= '" + last_name +"'";
 					System.out.println("query_id :" + query_id);
@@ -108,13 +105,17 @@ public class cart_authenticity_check extends HttpServlet {
 					request.setAttribute("first_name", first_name);
 					request.setAttribute("last_name", last_name);
 					request.setAttribute("credit_card_id", credit_card_number);
-					//request.setAttribute("id", list_customers.get(0));
-					RequestDispatcher dispatcher = request.getRequestDispatcher("confirmation_page.jsp");
+					if(list_customers!=null){
+					request.setAttribute("id", list_customers.get(0));
+					request.setAttribute("home_address", list_customers.get(3));
+					request.setAttribute("email", list_customers.get(3));
+					}
+					RequestDispatcher dispatcher = request.getRequestDispatcher("confirmation-page_final.jsp");
 					test_connection.close();
 					dispatcher.forward(request, response);
 							
 							
-				out.println("Valid Customer");
+//				out.println("Valid Customer");
 				//out.println(list_customers.get(0));
 						
 				}else{

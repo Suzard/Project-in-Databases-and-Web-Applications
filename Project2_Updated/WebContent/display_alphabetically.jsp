@@ -23,7 +23,7 @@
 Integer display_count = 5;
 Integer page_number=1;
 Integer page_number_start = 0;
-System.out.println(page_number_start +"checking page 1");
+//System.out.println(page_number_start +"checking page 1");
 Integer super_temp = 0;
 String sort_by = "year";
 String sort_order = "asc";
@@ -213,7 +213,7 @@ if(request.getParameter("sort_order")!=null){
 		%>
 		<%if(data.size()==0) {
 
-		String redirectURL = "http://localhost:8080/Project2_Updated/display_alphabetically.jsp?page_number=" + 0 + "&display_count=" + display_count + "&button_clicked=" + alphabetical_value + "&page_number_start=" + (page_number_start-display_count);
+		String redirectURL = "http://localhost:8080/Project2_updated/display_alphabetically.jsp?page_number=" + 0 + "&display_count=" + display_count + "&button_clicked=" + alphabetical_value + "&page_number_start=" + (page_number_start-display_count);
 // httpResp.sendRedirect(httpReq.getRequestURI());
 		System.out.println("wrong");
 // 	    response.sendRedirect(getRequestURI()); 

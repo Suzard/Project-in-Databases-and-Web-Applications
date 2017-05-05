@@ -207,7 +207,7 @@ if(request.getParameter("sort_order")!=null){
 		%>
 		<%if(data.size()==0) {
 
-		String redirectURL = "http://localhost:8080/Project2_Updated/display_genres.jsp?page_number=" + 0 + "&display_count=" + display_count + "&button_clicked=" + genre_value + "&page_number_start=" + (page_number_start-display_count);
+		String redirectURL = "http://localhost:8080/Project2_updated/display_genres.jsp?page_number=" + 0 + "&display_count=" + display_count + "&button_clicked=" + genre_value + "&page_number_start=" + (page_number_start-display_count);
 // httpResp.sendRedirect(httpReq.getRequestURI());
 		System.out.println("wrong");
 // 	    response.sendRedirect(getRequestURI()); 
@@ -256,7 +256,25 @@ if(request.getParameter("sort_order")!=null){
 			
 		<a href= "star_file.jsp?Star=<%=encoded_first%>&Last=<%=encoded_last%>" ><%=splitting[0]+" " +splitting[1]%></a>
 		<% }%>
-
+		<td>
+		<%
+		String url="";
+		if(page_number>1){
+		url = "servlet_cart?page_number=" + page_number + "&display_count=" + display_count + 
+						"&button_clicked=" + genre_value + "&page_number_start=" + page_number_start
+						+ "&cart_movie_id=" + Integer.parseInt(entry.getKey().toString()) + 
+						"&movie_name=e.get(0).toString()" + "&check=0";
+		}
+		else if(page_number==1){
+			url = "servlet_cart?button_clicked=" + genre_value + "&page_number=" + page_number + "&cart_movie_id=" 
+				+ Integer.parseInt(entry.getKey().toString()) + "&movie_name=e.get(0).toString()" + "&check=0";
+				}%>
+				
+		<form method=post action=<%=url%>>
+		<input type="number" name ="quantity">
+		<input type="submit" name="submit" value="Add to Cart">
+		</form>
+		</td>
 		<tr>
 		<%}%>
         </table>

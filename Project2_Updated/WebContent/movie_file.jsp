@@ -37,7 +37,7 @@ String star_lastname = "";
 		Map<Integer, ArrayList<Object>> data = new HashMap<Integer, ArrayList<Object>>();
 // 		String movie_title_r = request.getParameter("Movie");
 		String encrypted = request.getParameter("Movie");
-		System.out.println("encrypyed" + encrypted);
+//		System.out.println("encrypyed" + encrypted);
 		String movie_title_r = java.net.URLDecoder.decode(encrypted, "UTF-8");
 		
 // 		String movie_title_r = "Starsky & Hutch";
@@ -133,6 +133,18 @@ String star_lastname = "";
 	Iterator <Map.Entry<Integer, ArrayList<Object>>> iterating =  data.entrySet().iterator();
 %>
 
+		<form action="confirmation_page.jsp">
+<input type="submit" value="checkout">
+</form>
+
+<form action="cart_authenticity_check.jsp">
+<input type="submit" value="Proceed to Checkout">
+</form>
+
+<form action="logout.jsp">
+<input type="submit" value="logout">
+</form>
+
 		<table border=1 cellpadding=1>
 		<th>ID</th>
 		<th>Title</th>
@@ -165,7 +177,7 @@ String star_lastname = "";
 			<%String encoded_name_v = iterate_genre.next(); %>	
 			<%String genre_name_v = URLEncoder.encode(encoded_name_v); %>
 		
-		<a href= "display_genres.jsp?button_clicked=<%=genre_name_v%> " ><%=genre_name_v%></a>
+		<a href= "display_list.jsp?button_clicked_g=<%=genre_name_v%> " ><%=encoded_name_v%></a>
 		<% }%>
         <td><img src=<%=image_url%> style="width:100px;height:100px;"> <!-- poster -->
 		<td><% while(iterate_star.hasNext()){ %>
@@ -174,7 +186,7 @@ String star_lastname = "";
 		<a href= "star_file.jsp?Star=<%=splitting[0]%>&Last=<%=splitting[1]%> " ><%=splitting[0]+" " +splitting[1]%></a>
 		<% }%>
 		<td><a href= <%=e.get(4).toString()%>><%=e.get(4).toString()%></a></td> <!-- trailer -->
-		<td> <button name="movie_title" type="submit" value=<%=encoded_title_url%>>Buy Now!</button></td>
+		
 		<tr>
 		<%}%>
         </table>

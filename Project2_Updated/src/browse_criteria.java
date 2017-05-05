@@ -31,7 +31,7 @@ public class browse_criteria extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
@@ -39,20 +39,15 @@ public class browse_criteria extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//doGet(request, response);
+
 		response.setContentType("text/html");  
         PrintWriter out=response.getWriter();  
-        
-//        <tr><input type="radio" name="criteria_search" value="display_alphabetically" >display alphabetically</tr>
-//        <tr><input type="radio" name="criteria_search" value="display_genres" >display genres</tr><br>
-//        
+     
         String val= request.getParameter("criteria_search");
-//        System.out.println("Saaaaaaaaa");
+
 		if(val.equals("display_alphabetically")) response.sendRedirect("browse_movies_alphabetically.jsp");
 		else if(val.equals("display_genres")) response.sendRedirect("browse_movies.jsp"); //for display genres
-//        RequestDispatcher rd=request.getRequestDispatcher("display_list.jsp");  
-//        rd.forward(request, response);
+
 		
 	}
 
