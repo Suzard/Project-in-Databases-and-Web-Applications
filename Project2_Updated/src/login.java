@@ -116,6 +116,26 @@ public class login extends HttpServlet {
 							Declarations.session_active.put(session, session_local_details);
 						if(!Declarations.cart.containsKey(session))
 							Declarations.cart.put(session, new cart_main());
+						String remoteAddr = request.getRemoteAddr();
+				        ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
+				        reCaptcha.setPrivateKey("6LfBMyAUAAAAAHPqAlU6HzqTAdEGfB6axGC1BM9j");
+
+				        String challenge = request.getParameter("recaptcha_challenge_field");
+				        String uresponse = request.getParameter("recaptcha_response_field");
+				        ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, challenge, uresponse);
+
+				        if (reCaptchaResponse.isValid()) {
+				          //out.print("Answer was entered correctly!");
+				        	RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search.jsp");
+							test_connection.close();
+							dispatcher.forward(request, response);
+				        } else {
+				        	request.setAttribute("error_captcha", "Please enter the correct captcha.");
+							RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+							test_connection.close();
+							dispatcher.forward(request,response);
+							
+				        }
 						//RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search.jsp");
 						//test_connection.close();
 						//dispatcher.forward(request, response);
@@ -136,26 +156,7 @@ public class login extends HttpServlet {
 //					response.sendRedirect("login.jsp");
 				}
 				
-		        String remoteAddr = request.getRemoteAddr();
-		        ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-		        reCaptcha.setPrivateKey("6LfBMyAUAAAAAHPqAlU6HzqTAdEGfB6axGC1BM9j");
-
-		        String challenge = request.getParameter("recaptcha_challenge_field");
-		        String uresponse = request.getParameter("recaptcha_response_field");
-		        ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, challenge, uresponse);
-
-		        if (reCaptchaResponse.isValid()) {
-		          //out.print("Answer was entered correctly!");
-		        	RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search.jsp");
-					test_connection.close();
-					dispatcher.forward(request, response);
-		        } else {
-		        	request.setAttribute("error_captcha", "Please enter the correct captcha.");
-					RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-					test_connection.close();
-					dispatcher.forward(request,response);
-					
-		        }
+		        
 	}
 				 catch (SQLException e) {
 					// TODO Auto-generated catch block
