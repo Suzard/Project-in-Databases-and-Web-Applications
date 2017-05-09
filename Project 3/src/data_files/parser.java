@@ -1,8 +1,10 @@
 package data_files;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,8 +39,7 @@ public class parser {
 				else {
 					System.out.println("Connection Successfull");
 				}
-			File inputFile_stars = new File(
-					"src/data_files/actors63.xml");
+			File inputFile_stars = new File("src/data_files/actors63.xml");
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			String path = "actors63.xml";
@@ -46,25 +47,61 @@ public class parser {
 
 			
 			
-			
+			System.out.println("Hi 1");
 			Document document = builder.parse(inputFile_stars);
-			//document.getDocumentElement().normalize();
-			NodeList list_children_stars = document.getElementsByTagName("actor");
-
-			for (int i = 0; i < list_children_stars.getLength(); i++) {
-				Node node_child = list_children_stars.item(i);
-				System.out.println("\nCurrent Element :" + node_child.getNodeName());
-				Element element_child = (Element) node_child;
-				String first_name="",last_name="", dob="";
-				first_name = element_child.getElementsByTagName("firstname").item(0).getTextContent();
-				last_name=element_child.getElementsByTagName("lastname").item(0).getTextContent();
-				dob=element_child.getElementsByTagName("dob").item(0).getTextContent();
+			System.out.println("Hi 2");
+			document.normalize();
+			NodeList list_actors = document.getElementsByTagName("actors");
+			System.out.println("Hi 3");
+			Node node_actors = list_actors.item(0);
+			System.out.println("Hi 4");
+			Element element_actors = (Element) node_actors;
+			System.out.println("Hi 5");
+			NodeList list_actor = element_actors.getElementsByTagName("actor");
+			System.out.println("Length :" + list_actor.getLength());
+			for (int i = 0; i < 1300; i++) {
 				
+				String firstname="", lastname="",dob="";
+				Node node_actor = list_actor.item(i);
+				Element element_actor = (Element) node_actor;
+				System.out.println("\nCurrent Element :" + element_actors.getNodeName());
+				Node node_actor_firstname = element_actor.getElementsByTagName("firstname").item(0);
+				Node node_actor_lastname  = element_actor.getElementsByTagName("familyname").item(0);
+				Node node_actor_dob                  = element_actor.getElementsByTagName("dob").item(0);
+				Element element_actor_firstname = (Element) node_actor_firstname;
+				firstname=element_actor_firstname.getTextContent();
+				
+				try{
+				if(firstname==null) firstname="";
+				System.out.println("First Name : " +firstname);//+ element_child.getElementsByTagName("firstname").item(0).getTextContent());
+				}catch(Exception e){
+					e.printStackTrace();
+					continue;
+				}
+				
+				try{
+				Element element_actor_lastname = (Element) node_actor_lastname;
+				lastname=element_actor_lastname.getTextContent();
+				if(lastname==null) lastname="";
+				System.out.println("Last Name : " + lastname);//element_child.getElementsByTagName("familyname").item(0).getTextContent());
+				}catch(Exception e){
+					e.printStackTrace();
+					continue;
+				}
+				
+				try{
+				Element element_actor_dob = (Element) node_actor_dob;
+				dob=element_actor_dob.getTextContent();
+				if(dob==null) dob="";
 					
-					System.out.println("First Name : " +first_name);//+ element_child.getElementsByTagName("firstname").item(0).getTextContent());
-					System.out.println("Last Name : " + last_name);//element_child.getElementsByTagName("familyname").item(0).getTextContent());
 					System.out.println("DOB : " + dob);//element_child.getElementsByTagName("dob").item(0).getTextContent());
-
+				}catch(Exception e){
+					e.printStackTrace();
+//					dob="";
+//					System.out.println("DOB : " + dob);
+					continue;
+					
+				}
 			}
 
 		} catch (SAXException e) {
