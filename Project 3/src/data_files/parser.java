@@ -96,14 +96,58 @@ public class parser {
 				
 			}
 			File inputFile_stars = new File("src/data_files/actors63.xml");
+			File inputFile_mains = new File("src/data_files/mains243.xml");
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			String path = "actors63.xml";
 
 
 			
 			
 
+			
+			
+			//Adding mains to the database
+			String mains_moviename=null;
+			String mains_year_string;
+			Integer mains_year_integer = 0;
+			Document document_mains = builder.parse(inputFile_mains);
+			document_mains.normalize();
+			NodeList list_mains_movies = document_mains.getElementsByTagName("movies");
+			if(list_mains_movies!=null && list_mains_movies.getLength()>0){
+				//for(int i=0;i<list_mains_movies.getLength();i++){
+					Element  element_mains_movies   = (Element) list_mains_movies.item(0);
+					NodeList list_mains_directorfilms         = (NodeList) element_mains_movies.getElementsByTagName("directorfilms");
+					if(list_mains_directorfilms.getLength()>0 && list_mains_directorfilms!=null){
+						for(int i=0;i<list_mains_directorfilms.getLength();i++){
+						Element element_mains_directorfilms = (Element) list_mains_directorfilms.item(i);
+						NodeList list_mains_film = element_mains_directorfilms.getElementsByTagName("film");
+						if(list_mains_film !=null || list_mains_film.getLength()>0){
+							for(int j=0;j<list_mains_film.getLength();j++){
+								Element element_mains_film = (Element) list_mains_film.item(j);
+								mains_moviename = element_mains_film.getElementsByTagName("t").item(0).getTextContent().trim();
+								
+								// Fetching movie name
+								if(mains_moviename==null) mains_moviename ="";
+								mains_year_string = element_mains_film.getElementsByTagName("year").item(0).getTextContent().trim();
+								
+								//Fetching movie year
+								try{
+								if(mains_year_string!=null) mains_year_integer =Integer.parseInt(mains_year_string);
+								}catch(Exception e){
+									mains_year_integer = 2001;
+								}
+								System.out.println("Movie Name :" + mains_moviename);
+								System.out.println("Movie Year :"); System.out.println(mains_year_integer);
+								
+							}
+						}
+						}
+					}
+				//}
+			}
+			
+			
+			//Adding actors to the database
 			Document document = builder.parse(inputFile_stars);
 			document.normalize();
 			NodeList list_actors = document.getElementsByTagName("actors");
