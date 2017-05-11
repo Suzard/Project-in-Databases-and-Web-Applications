@@ -107,8 +107,7 @@ public class parser {
 			
 			
 			//Adding mains to the database
-			String mains_moviename=null;
-			String mains_year_string;
+			String mains_moviename=null, mains_year_string, mains_director_name=null, mains_directorname=null;
 			Integer mains_year_integer = 0;
 			Document document_mains = builder.parse(inputFile_mains);
 			document_mains.normalize();
@@ -124,20 +123,39 @@ public class parser {
 						if(list_mains_film !=null || list_mains_film.getLength()>0){
 							for(int j=0;j<list_mains_film.getLength();j++){
 								Element element_mains_film = (Element) list_mains_film.item(j);
-								mains_moviename = element_mains_film.getElementsByTagName("t").item(0).getTextContent().trim();
 								
 								// Fetching movie name
-								if(mains_moviename==null) mains_moviename ="";
-								mains_year_string = element_mains_film.getElementsByTagName("year").item(0).getTextContent().trim();
+								try{
 								
+								mains_moviename = element_mains_film.getElementsByTagName("t").item(0).getTextContent().trim();
+								}catch(Exception e){
+									System.out.println("Exception in fetching movie name" +mains_moviename); e.printStackTrace();
+								}
 								//Fetching movie year
 								try{
+								if(mains_moviename==null) mains_moviename ="";
+								mains_year_string = element_mains_film.getElementsByTagName("year").item(0).getTextContent().trim();
 								if(mains_year_string!=null) mains_year_integer =Integer.parseInt(mains_year_string);
 								}catch(Exception e){
 									mains_year_integer = 2001;
 								}
-								System.out.println("Movie Name :" + mains_moviename);
-								System.out.println("Movie Year :"); System.out.println(mains_year_integer);
+								
+								//Fetching Director Name
+								try{
+									NodeList list_mains_dirs = element_mains_film.getElementsByTagName("dirs");
+									Element element_main_dirs = (Element) list_mains_dirs.item(0);
+									
+									NodeList list_mains_dirn = element_main_dirs.getElementsByTagName("dirn");
+									Element element_mains_dirn = (Element) list_mains_dirn.item(0);
+									
+									mains_directorname = element_mains_dirn.getTextContent().trim();
+								}catch(Exception e){
+									System.out.println("Exception in Director name" + mains_director_name );
+									mains_directorname ="Anonymous";
+								}
+								System.out.println("\nMovie Name : " + mains_moviename);
+								System.out.println("Movie Year : "); System.out.print(mains_year_integer);
+								System.out.println("\nDirector : " + mains_directorname);
 								
 							}
 						}
@@ -171,7 +189,7 @@ public class parser {
 				if(firstname==null) firstname="";
 				//System.out.println("First Name : " +firstname);//+ element_child.getElementsByTagName("firstname").item(0).getTextContent());
 				}catch(Exception e){
-					e.printStackTrace();
+					System.out.println("Error in First Name" + firstname);e.printStackTrace();
 					continue;
 				}
 				
