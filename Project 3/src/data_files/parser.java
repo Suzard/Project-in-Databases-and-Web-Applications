@@ -34,8 +34,10 @@ public class parser {
 		// TODO Auto-generated method stub
 		// Reference :
 		// https://www.tutorialspoint.com/java_xml/java_dom_parse_document.htm
-		Map<String, Object> map_stars = new LinkedHashMap<String, Object>();
-		Map<Integer, Object> map_genres = new LinkedHashMap<Integer, Object>();
+		Map<String, Object> map_stars   = new LinkedHashMap<String, Object>();
+		Map<String, Object> map_genres = new LinkedHashMap<String, Object>();
+		Map<String, Object> map_cat     = new LinkedHashMap<String, Object>();
+		
 		TreeSet<String> set = new TreeSet<String>();
 		
 			try {
@@ -51,7 +53,7 @@ public class parser {
 				}
 				
 			String query_stars = "select * from stars";
-			String query_genres = "select * from genres_in_movies inner join genres on genres.id = genres_in_movies.genre_id";
+			String query_genres = "select * from genres_in_movies inner join genres on genres.id = genres_in_movies.genre_id inner join movies on genres_in_movies.movies_id = movies.id;";
 			
 			Statement select_stars = (Statement) test_connection.createStatement();
 			Statement select_genres = (Statement) test_connection.createStatement();
@@ -75,21 +77,22 @@ public class parser {
 				Integer genre_id = (Integer) result_genres.getInt("genre_id");
 				Integer movies_id = (Integer) result_genres.getInt("movies_id");
 				String genre_name = result_genres.getString("name");
+				String movie_name = result_genres.getString("title");
 				
 				//System.out.println("genre_id :" + genre_id);
 				//System.out.println("movies_id :" + movies_id);
 				//System.out.print("genre_name : " + genre_name);
-				if(map_genres.containsKey(movies_id)){
+				if(map_genres.containsKey(movie_name)){
 					ArrayList<Object> list_genres = new ArrayList<Object>();
-					list_genres = (ArrayList<Object>) map_genres.get(movies_id);
+					list_genres = (ArrayList<Object>) map_genres.get(movie_name);
 					list_genres.add(genre_name);
-					map_genres.put(movies_id, list_genres);
-					//System.out.println("List :"+list_genres);
+					map_genres.put(movie_name, list_genres);
+					System.out.println("List :"+list_genres);
 				}else{
 					ArrayList<Object> list_genres = new ArrayList<Object>();
 					list_genres.add(genre_name);
-					map_genres.put(movies_id, list_genres);
-					//System.out.println("List :"+list_genres);
+					map_genres.put(movie_name, list_genres);
+					System.out.println("List :"+list_genres);
 				}
 				
 				
@@ -119,11 +122,21 @@ public class parser {
 					if(list_mains_directorfilms.getLength()>0 && list_mains_directorfilms!=null){
 						for(int i=0;i<list_mains_directorfilms.getLength();i++){
 						Element element_mains_directorfilms = (Element) list_mains_directorfilms.item(i);
+						String mains_directorid = element_mains_directorfilms.getElementsByTagName("dirid").item(0).getTextContent().trim();
 						NodeList list_mains_film = element_mains_directorfilms.getElementsByTagName("film");
 						if(list_mains_film !=null || list_mains_film.getLength()>0){
 							for(int j=0;j<list_mains_film.getLength();j++){
 								Element element_mains_film = (Element) list_mains_film.item(j);
 								
+								//Movies ID
+								try{
+									Integer length = mains_directorid.length();
+									String dummy_main_movieid = element_mains_film.getElementsByTagName("fid").item(0).getTextContent().trim();
+									String main_movieid = dummy_main_movieid.substring(length, dummy_main_movieid.length());
+									System.out.println("Main Movie Id" + main_movieid);
+								}catch(Exception e){
+									
+								}
 								// Fetching movie name
 								try{
 								
@@ -153,6 +166,22 @@ public class parser {
 									System.out.println("Exception in Director name" + mains_director_name );
 									mains_directorname ="Anonymous";
 								}
+								
+								NodeList list_mains_cats = element_mains_movies.getElementsByTagName("cats");
+								Element element_mains_cats = (Element) list_mains_cats.item(0);
+								
+								NodeList list_mains_cat = element_mains_cats.getElementsByTagName("cat");
+								ArrayList<Object> local_mains_genres = new ArrayList<Object>();
+								//(ArrayList<Object>) map_genres.get(mains_moviename);
+								
+								for(int k= 0; k<list_mains_cat.getLength();k++){
+									if((map_genres.get(mains_moviename)==null) || (!local_mains_genres.contains(list_mains_cat.item(k)))){
+										local_mains_genres.add(list_mains_cat.item(k).getTextContent().trim());
+										map_genres.put(mains_moviename, local_mains_genres);
+										System.out.println("Local genres" + local_mains_genres);
+									}
+								}
+								//Element element_mains_cat = (Element) list_mains_cat.
 								System.out.println("\nMovie Name : " + mains_moviename);
 								System.out.println("Movie Year : "); System.out.print(mains_year_integer);
 								System.out.println("\nDirector : " + mains_directorname);
@@ -207,7 +236,7 @@ public class parser {
 				Element element_actor_dob = (Element) node_actor_dob;
 				dob=element_actor_dob.getTextContent().trim();
 			
-				if(dob=="") dob="2001";
+				if(dob.equals("")) dob="2001";
 					
 				if(!dob.matches("-?\\d+")) {dob="2001"; }//System.out.println("not matches");}
 					//System.out.println("DOB : " + dob);//element_child.getElementsByTagName("dob").item(0).getTextContent());
@@ -244,7 +273,7 @@ public class parser {
 //			      }
 //				 
 //				}
-			Iterator <Map.Entry<Integer, Object>> it = map_genres.entrySet().iterator();
+			Iterator <Map.Entry<String, Object>> it = map_genres.entrySet().iterator();
 //			while(it.hasNext()){
 //				Map.Entry<Integer, Object> pair = it.next();
 //				System.out.println("Key" + pair.getKey());
