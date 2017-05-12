@@ -52,8 +52,8 @@ public class parser {
 					System.out.println("Connection Successfull");
 				}
 				
-			String query_stars = "select * from stars";
-			String query_genres = "select * from genres_in_movies inner join genres on genres.id = genres_in_movies.genre_id inner join movies on genres_in_movies.movies_id = movies.id;";
+			String query_stars = "select * from stars order by id";
+			String query_genres = "select * from genres_in_movies inner join genres on genres.id = genres_in_movies.genre_id inner join movies on genres_in_movies.movies_id = movies.id order by genres.id";
 			
 			Statement select_stars = (Statement) test_connection.createStatement();
 			Statement select_genres = (Statement) test_connection.createStatement();
@@ -196,6 +196,7 @@ public class parser {
 			
 			//Adding actors to the database
 			Document document = builder.parse(inputFile_stars);
+			PreparedStatement star_insert = null;
 			document.normalize();
 			NodeList list_actors = document.getElementsByTagName("actors");
 			Node node_actors = list_actors.item(0);
@@ -224,61 +225,51 @@ public class parser {
 				
 				try{
 				Element element_actor_lastname = (Element) node_actor_lastname;
-				lastname=element_actor_lastname.getTextContent().trim();
-				if(lastname==null) lastname="";
+				lastname=element_actor_lastname.getTextContent();
+				if(lastname==null || lastname=="") lastname="";
+				else lastname= lastname.trim();
 				//System.out.println("Last Name : " + lastname);//element_child.getElementsByTagName("familyname").item(0).getTextContent());
 				}catch(Exception e){
+					System.out.println("Error in Last Name:" + lastname);
+					lastname="";
 					e.printStackTrace();
 					continue;
 				}
 				
 				try{
 				Element element_actor_dob = (Element) node_actor_dob;
-				dob=element_actor_dob.getTextContent().trim();
+				if(element_actor_dob.getTextContent()!=null ){
+				dob=element_actor_dob.getTextContent();
 			
-				if(dob.equals("")) dob="2001";
+				if(dob.equals("") || dob==null) dob="2001";
 					
 				if(!dob.matches("-?\\d+")) {dob="2001"; }//System.out.println("not matches");}
+				else dob = dob.trim();}
+				else dob="2001";
 					//System.out.println("DOB : " + dob);//element_child.getElementsByTagName("dob").item(0).getTextContent());
 				}catch(Exception e){
+					System.out.println("error in dob :" + dob);
+					dob="2001";
 					e.printStackTrace();
 
 					continue;
 					
 				}
-				PreparedStatement star_insert = null;
+				
 				star_insert = test_connection.prepareStatement("insert into stars(first_name,last_name,dob) values(?,?,?);");
 				if(!map_stars.containsKey(firstname + " " + lastname + " " + dob)){
 					star_insert.setString(1, firstname);
 					star_insert.setString(2, lastname);
-//					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//					Date myDate = formatter.parse(dob+"-01-01"));
-//					java.sql.Date sqlDate = new java.sql.Date(myDate.getTime());
 					star_insert.setDate(3, java.sql.Date.valueOf(dob+"-01-01"));
-					star_insert.execute();
+					star_insert.addBatch();
 					map_stars.put(firstname+ " " + lastname + " " + dob, firstname +","+lastname+","+dob);
 				}
 				
 			}
 			
-//			Iterator<String> it= set.iterator();
-//			
-//			while(it.hasNext()){
-//				int i=1;
-//				String  combined_stars = it.next();
-//				 for (String star_details: combined_stars.split(",")) {
-//					 
-//					 System.out.println(i + "." + "Star Details : " +star_details);
-//					 ++i;	
-//			      }
-//				 
-//				}
+			
+			star_insert.executeBatch();
 			Iterator <Map.Entry<String, Object>> it = map_genres.entrySet().iterator();
-//			while(it.hasNext()){
-//				Map.Entry<Integer, Object> pair = it.next();
-//				System.out.println("Key" + pair.getKey());
-//				System.out.println("Value" + pair.getValue());
-//			}
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
