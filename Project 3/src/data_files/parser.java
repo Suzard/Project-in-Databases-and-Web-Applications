@@ -37,6 +37,10 @@ public class parser {
 		Map<String, Object> map_stars   = new LinkedHashMap<String, Object>();
 		Map<String, Object> map_genres = new LinkedHashMap<String, Object>();
 		Map<String, Object> map_cat     = new LinkedHashMap<String, Object>();
+		Map<String, Object> map_movies     = new LinkedHashMap<String, Object>();
+		Map<String, Integer> map_genres_list = new LinkedHashMap<String, Integer>();
+		
+		Integer max_genre_id=0;
 		
 		TreeSet<String> set = new TreeSet<String>();
 		
@@ -52,14 +56,19 @@ public class parser {
 					System.out.println("Connection Successfull");
 				}
 				
-			String query_stars = "select * from stars order by id";
-			String query_genres = "select * from genres_in_movies inner join genres on genres.id = genres_in_movies.genre_id inner join movies on genres_in_movies.movies_id = movies.id order by genres.id";
+			test_connection.setAutoCommit(false);	
 			
-			Statement select_stars = (Statement) test_connection.createStatement();
+			String query_stars  	= "select * from stars order by id";
+			String query_genres 	= "select * from genres_in_movies inner join genres on genres.id = genres_in_movies.genre_id inner join movies on genres_in_movies.movies_id = movies.id order by genres.id";
+			String query_movies 	= "select * from movies order by id";
+			
+			Statement select_stars  = (Statement) test_connection.createStatement();
 			Statement select_genres = (Statement) test_connection.createStatement();
+			Statement select_movies = (Statement) test_connection.createStatement();
 			
-			ResultSet result_stars = select_stars.executeQuery(query_stars);
+			ResultSet result_stars  = select_stars.executeQuery(query_stars);
 			ResultSet result_genres = select_genres.executeQuery(query_genres);
+			ResultSet result_movies = select_movies.executeQuery(query_movies);
 			
 			while(result_stars.next()){
 				String first_name1="", last_name1="";
@@ -74,7 +83,7 @@ public class parser {
 			}
 			
 			while(result_genres.next()){
-				Integer genre_id = (Integer) result_genres.getInt("genre_id");
+				Integer genre_id  = (Integer) result_genres.getInt("genre_id");
 				Integer movies_id = (Integer) result_genres.getInt("movies_id");
 				String genre_name = result_genres.getString("name");
 				String movie_name = result_genres.getString("title");
@@ -93,9 +102,22 @@ public class parser {
 					list_genres.add(genre_name);
 					map_genres.put(movie_name, list_genres);
 					System.out.println("List :"+list_genres);
+				}	
+			}
+			
+			while(result_movies.next()){
+				String title    = result_movies.getString("title");
+				Integer year		= result_movies.getInt("year");
+				String director = result_movies.getString("year");
+				
+				if(!map_movies.containsKey(title+" "+year+" "+director))
+				{
+					ArrayList<Object> list_movies = new ArrayList<Object>();
+					list_movies.add(title);
+					list_movies.add(year);
+					list_movies.add(director);
+					map_movies.put(title+" "+year+" "+director, list_movies);
 				}
-				
-				
 				
 			}
 			File inputFile_stars = new File("src/data_files/actors63.xml");
@@ -111,6 +133,8 @@ public class parser {
 			
 			//Adding mains to the database
 			String mains_moviename=null, mains_year_string, mains_director_name=null, mains_directorname=null;
+			PreparedStatement main_insert_movies=null;
+			main_insert_movies = test_connection.prepareStatement("insert into movies(title,year,director) values(?,?,?);");
 			Integer mains_year_integer = 0;
 			Document document_mains = builder.parse(inputFile_mains);
 			document_mains.normalize();
@@ -185,7 +209,12 @@ public class parser {
 								System.out.println("\nMovie Name : " + mains_moviename);
 								System.out.println("Movie Year : "); System.out.print(mains_year_integer);
 								System.out.println("\nDirector : " + mains_directorname);
-								
+								if(!map_movies.containsKey(mains_moviename+" "+mains_year_integer+" "+mains_directorname)){
+								main_insert_movies.setString(1, mains_moviename);
+								main_insert_movies.setInt(2, mains_year_integer);
+								main_insert_movies.setString(3, mains_directorname);
+								main_insert_movies.execute();
+								}
 							}
 						}
 						}
@@ -256,7 +285,7 @@ public class parser {
 					
 				}
 				
-				star_insert = test_connection.prepareStatement("insert into stars(first_name,last_name,dob) values(?,?,?);");
+				star_insert = test_connection.prepareStatement("insert into stars(first_name,last_name,dob) values(?,?,?)");
 				if(!map_stars.containsKey(firstname + " " + lastname + " " + dob)){
 					star_insert.setString(1, firstname);
 					star_insert.setString(2, lastname);
@@ -269,6 +298,8 @@ public class parser {
 			
 			
 			star_insert.executeBatch();
+			test_connection.commit();
+			star_insert.close();
 			Iterator <Map.Entry<String, Object>> it = map_genres.entrySet().iterator();
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
