@@ -53,6 +53,8 @@ public class parser {
 		Map<String, Integer> map_film_movie_id = new LinkedHashMap<String, Integer>();
 		// map for (stagename, starid)
 		Map<String, Integer> map_stage_starid = new LinkedHashMap<String, Integer>();
+		// map for (stagename+starid,starid)
+		Map<String, Integer> map_stage_plus_starid = new LinkedHashMap<String, Integer>();
 		// map for (movies_id,genres_id)
 		Map<Integer, Object> map_movies_genres = new LinkedHashMap<Integer, Object>();
 		Integer max_genre_id = 0, max_movie_id = 0, check = 0, database_movie_id = 0;
@@ -535,6 +537,7 @@ public class parser {
 					System.out.println("actors_stagename : " + actors_stagename);
 					System.out.println("database_starid" + database_starid);
 					map_stage_starid.put(actors_stagename, database_starid);
+					map_stage_plus_starid.put(actors_stagename+database_starid, database_starid);
 				}
 
 			}
@@ -547,11 +550,21 @@ public class parser {
 
 			
 			String stagename = null,movieid_string=null;
-			Integer movieid_integer = 0;
-			PreparedStatement insertStarMovie = null;
+			Integer movieid_integer = 0, star_id_max=0;
+			PreparedStatement insertStarMovie = null, insert_stars_cast=null;
 			insertStarMovie = test_connection
 					.prepareStatement("insert into stars_in_movies(star_id,movie_id) values(?,?);");
+			insert_stars_cast = test_connection
+					.prepareStatement("insert into stars(first_name,last_name, dob) values(?,?,?);");
 			
+			PreparedStatement prepare_max_id_stars = null;
+			prepare_max_id_stars = test_connection.prepareStatement("select max(id) from stars;");
+			ResultSet result_max_id_stars = prepare_max_id_stars.executeQuery();
+			
+			if (result_max_id_stars.next()) {
+				star_id_max = result_max_id_stars.getInt(1);
+			}
+			prepare_max_id_stars.close();
 			Document document_cast = builder.parse(inputFile_cast);
 			document_cast.normalize();
 			NodeList list_cast_casts = document_cast.getElementsByTagName("casts");
@@ -593,17 +606,45 @@ public class parser {
 //
 //							if (check == 0) {
 							try{
+								int starId=0, movieId=0;
 								System.out.println("Stagename : "+stagename);
 								System.out.println("Move ID" + movieid_string);
-								int starId = map_stage_starid.get(stagename);
+								
+								if(map_stage_starid.get(stagename)!=null){
+								starId = map_stage_starid.get(stagename);
+								insertStarMovie.setInt(1, starId);
+								}else{
+									++star_id_max;
+									String[] split = stagename.split(" ");
+									insert_stars_cast.setString(1, split[0]);
+									insert_stars_cast.setString(2, split[1]);
+									insert_stars_cast.setString(3, null);
+									//map_stage_starid.put(stagename, value);
+									//insert_stars_cast.execute();
+									insertStarMovie.setInt(1, star_id_max);
+								}
 								System.out.println("After Star ID : "+starId);
-								int movieId = map_film_movie_id.get(movieid_string);
+								System.out.println("Max Star ID : "+star_id_max);
+								
+								//if(map_film_movie_id.get(movieid_string)!=null){
+								movieId = map_film_movie_id.get(movieid_string);
+								//}else{
+									
+								//}
+								
 								System.out.println("After Movie ID : "+movieId);
 								System.out.println("Star ID : " + starId);
 								System.out.println("Movie ID : " + movieId);
-								insertStarMovie.setInt(1, starId);
+//								if(map_stage_starid.get(stagename)!=null){
+//									
+//								insertStarMovie.setInt(1, starId);
+//								}else{
+//									insertStarMovie.setInt(1, star_id_max);
+//								}
+								
 								insertStarMovie.setInt(2, movieId);
 								insertStarMovie.execute();
+								insert_stars_cast.execute();
 							}catch(Exception e){
 								e.printStackTrace();
 							}
