@@ -103,13 +103,17 @@ public class parser {
 				String first_name1 = "", last_name1 = "";
 				String dob1 = "2001";
 				ArrayList<Object> list1 = new ArrayList<Object>();
+				Integer tmp_star_id1 = result_stars.getInt("id");
 				if (result_stars.getString("first_name") != null)
 					first_name1 = result_stars.getString("first_name").toString();
+				
 				last_name1 = result_stars.getString("last_name").toString();
+				
 				dob1 = result_stars.getString("dob");
 				list1.add(first_name1);
 				list1.add(last_name1);
 				list1.add(dob1);
+				if(!map_stage_starid.containsKey(first_name1 + " "+last_name1)) map_stage_starid.put(first_name1 + " "+last_name1, tmp_star_id1);
 				map_stars.put(first_name1 + last_name1 + dob1, list1);
 			}
 
@@ -401,7 +405,7 @@ public class parser {
 			Document document = builder.parse(inputFile_stars);
 			PreparedStatement star_insert = null;
 			document.normalize();
-
+			String original_dob="";
 			PreparedStatement prepare_statement_stars = null;
 			prepare_statement_stars = test_connection.prepareStatement("select max(id) from stars;");
 			ResultSet result_maxid_stars = prepare_statement_stars.executeQuery();
@@ -478,9 +482,11 @@ public class parser {
 				}
 				System.out.println("Last Name" + lastname);
 				// Actors date of birth
+				
 				try {
 					if (element_actor.getElementsByTagName("dob").item(0).getTextContent() != null) {
 						dob = element_actor.getElementsByTagName("dob").item(0).getTextContent();
+						original_dob=dob;
 
 						if (dob.equals("") || dob == null)
 							dob = "2001";
@@ -506,10 +512,11 @@ public class parser {
 				System.out.println("Before going inside : " + map_stars.get(firstname + lastname + dob));
 
 				ArrayList<Object> list_local_map_stars = new ArrayList<Object>();
+				if(!map_stage_starid.containsKey(firstname + " " + lastname));
 				if (map_stars.get(firstname + lastname + dob+ "-01-01") != null) {
 					list_local_map_stars = (ArrayList<Object>) map_stars.get(firstname + lastname + dob);
 				}
-				if (!map_stars.containsKey(firstname + lastname + dob+ "-01-01")) {
+				if (!map_stars.containsKey(firstname+lastname+original_dob)) {
 					System.out.println("Map Value : " + map_stars.get(firstname + lastname + dob));
 					System.out.println("After going inside");
 					System.out.println("List : " + list_local_map_stars);
@@ -536,7 +543,7 @@ public class parser {
 					if(map_stage_starid.get(actors_stagename) == null )
 					System.out.println("actors_stagename : " + actors_stagename);
 					System.out.println("database_starid" + database_starid);
-					map_stage_starid.put(actors_stagename, database_starid);
+					if(!map_stage_starid.containsKey(actors_stagename))map_stage_starid.put(actors_stagename, database_starid);
 					map_stage_plus_starid.put(actors_stagename+database_starid, database_starid);
 				}
 
@@ -565,6 +572,8 @@ public class parser {
 				star_id_max = result_max_id_stars.getInt(1);
 			}
 			prepare_max_id_stars.close();
+			
+			
 			Document document_cast = builder.parse(inputFile_cast);
 			document_cast.normalize();
 			NodeList list_cast_casts = document_cast.getElementsByTagName("casts");
@@ -599,52 +608,85 @@ public class parser {
 							continue;
 						}
 						if (movieid_string != null && stagename != null) {
-//							if (!map_film_movie_id.containsKey(movieid_string))
-//								check = 1;
-//							if (!map_stage_starid.containsKey(stagename))
-//								check = 1;
-//
-//							if (check == 0) {
+
 							try{
-								int starId=0, movieId=0;
+								int starId=0, movieId=0,tmp_id=0,tmp_check=1;
 								System.out.println("Stagename : "+stagename);
-								System.out.println("Move ID" + movieid_string);
+								//System.out.println("Movie ID : " + movieid_string);
 								
-								if(map_stage_starid.get(stagename)!=null){
-								starId = map_stage_starid.get(stagename);
-								insertStarMovie.setInt(1, starId);
-								}else{
-									++star_id_max;
-									String[] split = stagename.split(" ");
-									insert_stars_cast.setString(1, split[0]);
-									insert_stars_cast.setString(2, split[1]);
-									insert_stars_cast.setString(3, null);
-									//map_stage_starid.put(stagename, value);
-									//insert_stars_cast.execute();
-									insertStarMovie.setInt(1, star_id_max);
-								}
-								System.out.println("After Star ID : "+starId);
-								System.out.println("Max Star ID : "+star_id_max);
-								
-								//if(map_film_movie_id.get(movieid_string)!=null){
-								movieId = map_film_movie_id.get(movieid_string);
-								//}else{
+								if(map_stage_starid.get(stagename)!=null && map_film_movie_id.get(movieid_string)!=null)
+								{
+									starId = map_stage_starid.get(stagename);
+									insertStarMovie.setInt(1, starId);
 									
-								//}
+									movieId = map_film_movie_id.get(movieid_string);
+									System.out.println("Move ID : " + movieId);
+									insertStarMovie.setInt(2, movieId);
+									insertStarMovie.execute();	
+								}
 								
-								System.out.println("After Movie ID : "+movieId);
-								System.out.println("Star ID : " + starId);
-								System.out.println("Movie ID : " + movieId);
+								if(map_stage_starid.get(stagename)==null){
+									++star_id_max;
+									
+									String[] split = stagename.split(" ");
+									
+									if(split[0]!=null && split[0].length()>0)
+									insert_stars_cast.setString(1, split[0]);
+									else insert_stars_cast.setString(1, "Anonymous");
+									if(split.length >1 ){
+										insert_stars_cast.setString(2, split[1]);
+									}
+									else{
+										insert_stars_cast.setString(2, "Anonymous");
+									}
+									insert_stars_cast.setString(3, null);
+									map_stage_starid.put(stagename, star_id_max);
+									insert_stars_cast.execute();
+									//insertStarMovie.setInt(1, star_id_max);
+								}
 //								if(map_stage_starid.get(stagename)!=null){
-//									
-//								insertStarMovie.setInt(1, starId);
+//								starId = map_stage_starid.get(stagename);
+//								tmp_id=starId;
+//								tmp_check=1;
+//								//insertStarMovie.setInt(1, starId);
 //								}else{
-//									insertStarMovie.setInt(1, star_id_max);
+//									++star_id_max;
+//									tmp_id=star_id_max;
+//									String[] split = stagename.split(" ");
+//									if(split[0]!=null || split[0].length()>0)
+//									insert_stars_cast.setString(1, split[0]);
+//									else insert_stars_cast.setString(1, "Anonymous");
+//									
+//									if(split[1]!=null || split[1].length()>0)
+//									insert_stars_cast.setString(2, split[1]);
+//									else insert_stars_cast.setString(2, "Anonymous");
+//									insert_stars_cast.setString(3, null);
+//									//map_stage_starid.put(stagename, value);
+//									//insert_stars_cast.execute();
+//									//insertStarMovie.setInt(1, star_id_max);
+//									tmp_check=1;
 //								}
-								
-								insertStarMovie.setInt(2, movieId);
-								insertStarMovie.execute();
-								insert_stars_cast.execute();
+//								
+//								System.out.println("After Star ID : "+tmp_id);
+//								System.out.println("Max Star ID : "+star_id_max);
+//								
+//								if(map_film_movie_id.get(movieid_string)!=null){
+//								movieId = map_film_movie_id.get(movieid_string);
+//								insertStarMovie.setInt(1, tmp_id);
+//								insertStarMovie.setInt(2, movieId);
+//								insertStarMovie.execute();
+//								//map_film_movie_id.put(tmp_id, movieId);
+//								}else{
+//									continue;
+//								}
+//								
+//								System.out.println("After Movie ID : "+movieId);
+//								System.out.println("Star ID : " + starId);
+//								System.out.println("Movie ID : " + movieId);
+//								if(tmp_check==1){
+//								map_stage_starid.put(stagename, tmp_id);
+//								insert_stars_cast.execute();
+//							}
 							}catch(Exception e){
 								e.printStackTrace();
 							}
