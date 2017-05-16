@@ -37,7 +37,7 @@ public class parser {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		// Reference :
-		// https://www.tutorialspoint.com/java_xml/java_dom_parse_document.htm
+		// https://www.tutorialspoint.com/java_xml/java_dom_parse_document.html
 
 		// map for (firstname+lastname+dob, firstname+lastname)
 		Map<String, Object> map_stars = new LinkedHashMap<String, Object>();
@@ -134,9 +134,7 @@ public class parser {
 					map_movies_genres.put(movies_id, list_local);
 				}
 
-				// System.out.println("genre_id :" + genre_id);
-				// System.out.println("movies_id :" + movies_id);
-				// System.out.print("genre_name : " + genre_name);
+
 				if (map_genres.containsKey(movie_name)) {
 					ArrayList<Object> list_genres = new ArrayList<Object>();
 					list_genres = (ArrayList<Object>) map_genres.get(movie_name);
@@ -258,7 +256,11 @@ public class parser {
 									mains_moviename = element_mains_film.getElementsByTagName("t").item(0)
 											.getTextContent().trim();
 								} catch (Exception e) {
-									System.out.println("Exception in fetching movie name" + mains_moviename);
+									if(mains_movie_id!=null){
+									System.out.println("Exception in fetching movie name" + mains_moviename + "Movie id :" +mains_movie_id);
+									}else{
+										System.out.println("Exception in fetching movie name");
+									}
 									e.printStackTrace();
 									mains_moviename = "Default Movie";
 									continue;
@@ -275,7 +277,11 @@ public class parser {
 									if (mains_year_string != null)
 										mains_year_integer = Integer.parseInt(mains_year_string);
 								} catch (Exception e) {
-									System.out.println("Error in reading the year");
+									if(mains_movie_id!=null){
+									System.out.println("Error in reading the year" + "Movie id :" +mains_movie_id);
+									}else{
+										System.out.println("Error in reading the year");
+									}
 									mains_year_integer = 2017;
 									continue;
 								}
@@ -291,10 +297,15 @@ public class parser {
 
 									NodeList list_mains_dirn = element_main_dirs.getElementsByTagName("dirn");
 									Element element_mains_dirn = (Element) list_mains_dirn.item(0);
-
+									if(element_mains_dirn!=null){
 									mains_directorname = element_mains_dirn.getTextContent().trim();
+									}
 								} catch (Exception e) {
-									System.out.println("Exception in Director name" + mains_director_name);
+									if(mains_movie_id!=null){
+									System.out.println("Exception in Director name : " + mains_director_name + "Movie id :" +mains_movie_id);
+									}else{
+										System.out.println("Exception in Director name : " + mains_director_name);
+									}
 									mains_directorname = "Anonymous Director";
 								}
 
@@ -316,8 +327,8 @@ public class parser {
 									list_local.add(mains_moviename);
 									list_local.add(mains_year_integer);
 									list_local.add(mains_directorname);
-									System.out.println("Before putting into map :" + mains_moviename
-											+ mains_year_integer + mains_directorname);
+//									System.out.println("Before putting into map :" + mains_moviename
+//											+ mains_year_integer + mains_directorname);
 									map_movies.put("mains_moviename" + mains_year_integer + mains_directorname,
 											list_local);
 								}
@@ -405,7 +416,7 @@ public class parser {
 			Document document = builder.parse(inputFile_stars);
 			PreparedStatement star_insert = null;
 			document.normalize();
-			String original_dob="";
+			String original_dob="",original_firstname="",original_lastname="";
 			PreparedStatement prepare_statement_stars = null;
 			prepare_statement_stars = test_connection.prepareStatement("select max(id) from stars;");
 			ResultSet result_maxid_stars = prepare_statement_stars.executeQuery();
@@ -442,7 +453,9 @@ public class parser {
 
 				// Actors stagename
 				try {
+					if(element_actor.getElementsByTagName("stagename").item(0).getTextContent()!=null)
 					actors_stagename = element_actor.getElementsByTagName("stagename").item(0).getTextContent().trim().toLowerCase();
+					else System.out.println("Actor Stage Name is null");
 				} catch (Exception e) {
 					System.out.println("Error while reading the actors stage name");
 					e.printStackTrace();
@@ -455,11 +468,14 @@ public class parser {
 					// Element element_actor_firstname = (Element)
 					// node_actor_firstname;
 					firstname = element_actor.getElementsByTagName("firstname").item(0).getTextContent().trim();
+					original_firstname=firstname;
 					if (firstname == null || firstname.length() <= 0)
 						firstname = "Anonymous";
 
 				} catch (Exception e) {
+					if(actors_stagename==null)
 					System.out.println("Error in First Name" + firstname);
+					else System.out.println("Error in First Name" + firstname +"Actors Stage Name" + actors_stagename);
 					e.printStackTrace();
 					firstname = "Anonymous";
 					continue;
@@ -469,13 +485,16 @@ public class parser {
 				// Actors lastname
 				try {
 					lastname = element_actor.getElementsByTagName("familyname").item(0).getTextContent().trim();
+					original_lastname=lastname;
 					if (lastname == null || lastname.length() <= 0)
 						lastname = "Anonymous";
 					else
 						lastname = lastname.trim();
 
 				} catch (Exception e) {
+					if(actors_stagename==null)
 					System.out.println("Error in Last Name:" + lastname);
+					else System.out.println("Error in Last Name:" + lastname + "Actors Stage Name" + actors_stagename);
 					lastname = "Anonymous";
 					e.printStackTrace();
 					continue;
@@ -499,7 +518,9 @@ public class parser {
 						dob = "2001";
 
 				} catch (Exception e) {
+					if(actors_stagename==null)
 					System.out.println("error in dob :" + dob);
+					else System.out.println("error in dob :" + dob + "Actors Stage Name" + actors_stagename);
 					dob = "2001";
 					e.printStackTrace();
 
@@ -513,10 +534,10 @@ public class parser {
 
 				ArrayList<Object> list_local_map_stars = new ArrayList<Object>();
 				if(!map_stage_starid.containsKey(firstname + " " + lastname));
-				if (map_stars.get(firstname + lastname + dob+ "-01-01") != null) {
+				if (map_stars.get(original_firstname + original_lastname + original_dob) != null) {
 					list_local_map_stars = (ArrayList<Object>) map_stars.get(firstname + lastname + dob);
 				}
-				if (!map_stars.containsKey(firstname+lastname+original_dob)) {
+				if (!map_stars.containsKey(original_firstname + original_lastname+original_dob)) {
 					System.out.println("Map Value : " + map_stars.get(firstname + lastname + dob));
 					System.out.println("After going inside");
 					System.out.println("List : " + list_local_map_stars);
@@ -536,13 +557,15 @@ public class parser {
 					System.out.println("List : " + list_local_map_stars);
 					list_local_map_stars.add(dob + "-01-01");
 					System.out.println("List : " + list_local_map_stars);
-					map_stars.put(firstname + lastname + dob+ "-01-01", list_local_map_stars);
-					
+					map_stars.put(original_firstname + original_lastname+original_dob, list_local_map_stars);
+					//firstname + lastname + dob+ "-01-01"
 				}
 				if (actors_stagename!=null ){
-					if(map_stage_starid.get(actors_stagename) == null )
+					if(map_stage_starid.get(actors_stagename) != null )
 					System.out.println("actors_stagename : " + actors_stagename);
 					System.out.println("database_starid" + database_starid);
+					
+					
 					if(!map_stage_starid.containsKey(actors_stagename))map_stage_starid.put(actors_stagename, database_starid);
 					map_stage_plus_starid.put(actors_stagename+database_starid, database_starid);
 				}
@@ -644,6 +667,8 @@ public class parser {
 									insert_stars_cast.execute();
 									//insertStarMovie.setInt(1, star_id_max);
 								}
+								
+								
 //								if(map_stage_starid.get(stagename)!=null){
 //								starId = map_stage_starid.get(stagename);
 //								tmp_id=starId;
