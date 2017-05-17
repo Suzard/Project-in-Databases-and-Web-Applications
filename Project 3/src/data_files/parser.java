@@ -180,6 +180,7 @@ public class parser {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 
 			// Adding mains to the database
+			System.out.println("Started Parsing Mains File");
 			String mains_moviename = null, mains_year_string, mains_director_name = null, mains_directorname = null,
 					mains_movie_id = null;
 			Integer mains_year_integer = 2017;
@@ -202,8 +203,8 @@ public class parser {
 				max_movie_id = result_max_movies.getInt(1);
 			}
 			result_max_movies.close();
-			System.out.println("Max Genre ID : " + max_genre_id);
-			System.out.println("Max Movie ID : " + max_movie_id);
+			//System.out.println("Max Genre ID : " + max_genre_id);
+			//System.out.println("Max Movie ID : " + max_movie_id);
 
 			main_insert_movies = test_connection
 					.prepareStatement("insert into movies(title,year,director) values(?,?,?);");
@@ -242,13 +243,14 @@ public class parser {
 
 										mains_movie_id = element_mains_film.getElementsByTagName("filmed").item(0)
 												.getTextContent().trim();
+										//System.out.println("Movie ID : " + mains_movie_id);
 									} catch (Exception e1) {
 										System.out.println("Movie ID is not existing in the file");
 									}
 								}
 
 								// printing movie id
-								System.out.println("Movie ID : " + mains_movie_id);
+								//System.out.println("Movie ID : " + mains_movie_id);
 
 								// Fetching movie name
 								try {
@@ -267,7 +269,7 @@ public class parser {
 								}
 
 								// Printing Movie Name
-								System.out.println("Movie Name : " + mains_moviename);
+								//System.out.println("Movie Name : " + mains_moviename);
 
 								// Fetching movie year
 								try {
@@ -287,8 +289,8 @@ public class parser {
 								}
 
 								// Printing Movie year
-								System.out.print("Movie Year : ");
-								System.out.println(mains_year_integer);
+								//System.out.print("Movie Year : ");
+								//System.out.println(mains_year_integer);
 
 								// Fetching Director Name
 								try {
@@ -312,7 +314,7 @@ public class parser {
 								if (mains_directorname == null)
 									mains_directorname = "Anonymous Director";
 								// Printing Director Name
-								System.out.println("Director Name : " + mains_directorname);
+								//System.out.println("Director Name : " + mains_directorname);
 
 								// Putting the movie id as well as the
 								// incremented movieid
@@ -336,8 +338,9 @@ public class parser {
 								NodeList list_mains_cats = element_mains_film.getElementsByTagName("cats");
 								Element element_mains_cats = (Element) list_mains_cats.item(0);
 								try{
+							
 								NodeList list_mains_cat = element_mains_cats.getElementsByTagName("cat");
-								System.out.println("Length : " + list_mains_cat.getLength());
+								//System.out.println("Length : " + list_mains_cat.getLength());
 								
 								ArrayList<Object> local_mains_genres = (ArrayList<Object>) map_genres
 										.get(mains_moviename);
@@ -348,7 +351,7 @@ public class parser {
 								} else {
 									database_movie_id = max_movie_id;
 								}
-								System.out.println("Database Movie ID :" + database_movie_id);
+								//System.out.println("Database Movie ID :" + database_movie_id);
 								for (int a = 0; a < list_mains_cat.getLength(); a++) {
 //									try{
 //									String out_genre_name = list_mains_cat.item(a).getChildNodes().item(0)
@@ -365,12 +368,12 @@ public class parser {
 									// local_mains_genres);
 									// }
 									String genre_current = list_mains_cat.item(a).getTextContent().trim();
-									System.out.println("Genre Current" + genre_current);
+									//System.out.println("Genre Current" + genre_current);
 									ArrayList<Object> list_add_genres = new ArrayList<Object>();
 									if (map_movies_genres.containsKey(database_movie_id)) {
 										list_add_genres = (ArrayList<Object>) map_movies_genres.get(database_movie_id);
 									}
-									System.out.println("List before going inside condition :" + list_add_genres);
+									//System.out.println("List before going inside condition :" + list_add_genres);
 									if (!map_genres_list.containsKey(list_mains_cat.item(a).getTextContent().trim())) {
 
 										// ++max_movie_id;
@@ -410,8 +413,10 @@ public class parser {
 					}
 				}
 			}
-
+			
+			System.out.println("Parsed Successfully Mains243.xml");
 			// Adding actors to the database
+			System.out.println("Started Parsing Actors63.xml File");
 			Integer database_starid = 0;
 			Document document = builder.parse(inputFile_stars);
 			PreparedStatement star_insert = null;
@@ -433,7 +438,7 @@ public class parser {
 			Node node_actors = list_actors.item(0);
 			Element element_actors = (Element) node_actors;
 			NodeList list_actor = element_actors.getElementsByTagName("actor");
-			System.out.println("Length :" + list_actor.getLength());
+			//System.out.println("Length :" + list_actor.getLength());
 			for (int i = 0; i < list_actor.getLength(); i++) {
 
 				String firstname = null, lastname = null, dob = null, actors_stagename = null;
@@ -461,7 +466,7 @@ public class parser {
 					e.printStackTrace();
 					continue;
 				}
-				System.out.println("Stage Name : " + actors_stagename);
+				//System.out.println("Stage Name : " + actors_stagename);
 
 				// Actors firstname
 				try {
@@ -480,7 +485,7 @@ public class parser {
 					firstname = "Anonymous";
 					continue;
 				}
-				System.out.println("First Name" + firstname);
+				//System.out.println("First Name" + firstname);
 
 				// Actors lastname
 				try {
@@ -499,7 +504,7 @@ public class parser {
 					e.printStackTrace();
 					continue;
 				}
-				System.out.println("Last Name" + lastname);
+				//System.out.println("Last Name" + lastname);
 				// Actors date of birth
 				
 				try {
@@ -527,10 +532,10 @@ public class parser {
 					continue;
 
 				}
-				System.out.println("DOB" + dob);
+				//System.out.println("DOB" + dob);
 				star_insert = test_connection
 						.prepareStatement("insert into stars(first_name,last_name,dob) values(?,?,?)");
-				System.out.println("Before going inside : " + map_stars.get(firstname + lastname + dob));
+				//System.out.println("Before going inside : " + map_stars.get(firstname + lastname + dob));
 
 				ArrayList<Object> list_local_map_stars = new ArrayList<Object>();
 				if(!map_stage_starid.containsKey(firstname + " " + lastname));
@@ -538,9 +543,9 @@ public class parser {
 					list_local_map_stars = (ArrayList<Object>) map_stars.get(firstname + lastname + dob);
 				}
 				if (!map_stars.containsKey(original_firstname + original_lastname+original_dob)) {
-					System.out.println("Map Value : " + map_stars.get(firstname + lastname + dob));
-					System.out.println("After going inside");
-					System.out.println("List : " + list_local_map_stars);
+					//System.out.println("Map Value : " + map_stars.get(firstname + lastname + dob));
+					//System.out.println("After going inside");
+					//System.out.println("List : " + list_local_map_stars);
 					++database_starid;
 					star_insert.setString(1, firstname);
 					star_insert.setString(2, lastname);
@@ -548,22 +553,22 @@ public class parser {
 					star_insert.execute();
 					try {
 						list_local_map_stars.add(firstname);
-						System.out.println("List : " + list_local_map_stars);
+						//System.out.println("List : " + list_local_map_stars);
 					} catch (Exception e) {
 						e.printStackTrace();
 						continue;
 					}
 					list_local_map_stars.add(lastname);
-					System.out.println("List : " + list_local_map_stars);
+					//System.out.println("List : " + list_local_map_stars);
 					list_local_map_stars.add(dob + "-01-01");
-					System.out.println("List : " + list_local_map_stars);
+					//System.out.println("List : " + list_local_map_stars);
 					map_stars.put(original_firstname + original_lastname+original_dob, list_local_map_stars);
 					//firstname + lastname + dob+ "-01-01"
 				}
 				if (actors_stagename!=null ){
 					if(map_stage_starid.get(actors_stagename) != null )
-					System.out.println("actors_stagename : " + actors_stagename);
-					System.out.println("database_starid" + database_starid);
+					//System.out.println("actors_stagename : " + actors_stagename);
+					//System.out.println("database_starid" + database_starid);
 					
 					
 					if(!map_stage_starid.containsKey(actors_stagename))map_stage_starid.put(actors_stagename, database_starid);
@@ -571,12 +576,14 @@ public class parser {
 				}
 
 			}
-
+			
+			System.out.println("Successfully parsed Actors63.xml file");
 			// Adding cast to the database
-			System.out.println("LOOP IN THE CAST");
-			for (Entry<String, Integer> entry : map_film_movie_id.entrySet()) {
-				System.out.println(entry.getKey() + "/" + entry.getValue());
-			}	
+			System.out.println("Started parsing Casts124.xml file");
+			//System.out.println("LOOP IN THE CAST");
+//			for (Entry<String, Integer> entry : map_film_movie_id.entrySet()) {
+//				System.out.println(entry.getKey() + "/" + entry.getValue());
+//			}	
 
 			
 			String stagename = null,movieid_string=null;
@@ -604,16 +611,16 @@ public class parser {
 
 			
 			NodeList list_cast_movies = element_cast_casts.getElementsByTagName("dirfilms");
-			System.out.println("DirFilms Length : " + list_cast_movies.getLength());
+			//System.out.println("DirFilms Length : " + list_cast_movies.getLength());
 			for (int d = 0; d < list_cast_movies.getLength(); d++) {
 				Element element_cast_movies = (Element) list_cast_movies.item(d);
 
 				NodeList list_cast_filmc = element_cast_movies.getElementsByTagName("filmc");
-				System.out.println("filmc length : " + list_cast_filmc.getLength());
+				//System.out.println("filmc length : " + list_cast_filmc.getLength());
 				for (int b = 0; b < list_cast_filmc.getLength(); b++) {
 					Element element_cast_filmc = (Element) list_cast_filmc.item(b);
 					NodeList list_cast_m = element_cast_filmc.getElementsByTagName("m");
-					System.out.println("Listm Length : " + list_cast_m.getLength());
+					//System.out.println("Listm Length : " + list_cast_m.getLength());
 					for (int c = 0; c < list_cast_m.getLength(); c++) {
 						Element element_cast_m = (Element) list_cast_m.item(c);
 						try {
@@ -634,7 +641,7 @@ public class parser {
 
 							try{
 								int starId=0, movieId=0,tmp_id=0,tmp_check=1;
-								System.out.println("Stagename : "+stagename);
+								//System.out.println("Stagename : "+stagename);
 								//System.out.println("Movie ID : " + movieid_string);
 								
 								if(map_stage_starid.get(stagename)!=null && map_film_movie_id.get(movieid_string)!=null)
@@ -643,7 +650,7 @@ public class parser {
 									insertStarMovie.setInt(1, starId);
 									
 									movieId = map_film_movie_id.get(movieid_string);
-									System.out.println("Move ID : " + movieId);
+									//System.out.println("Move ID : " + movieId);
 									insertStarMovie.setInt(2, movieId);
 									insertStarMovie.execute();	
 								}
@@ -720,6 +727,7 @@ public class parser {
 					}
 				}
 			}
+			System.out.println("Parsed Successfully Casts124.xml file");
 //			star_insert.executeBatch();
 //			test_connection.commit();
 //			star_insert.close();
