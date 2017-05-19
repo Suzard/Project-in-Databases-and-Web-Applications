@@ -47,8 +47,12 @@ public class browse_criteria extends HttpServlet {
 
 		if(val.equals("display_alphabetically")) response.sendRedirect("browse_movies_alphabetically.jsp");
 		else if(val.equals("display_genres")) response.sendRedirect("browse_movies.jsp"); //for display genres
+		else if(val.equals("employee_add")) response.sendRedirect("_dashboard.jsp"); //for adding employees
+		else if(val.equals("star_add"))response.sendRedirect("new_star.jsp"); //for adding employees
+		else if(val.equals("provide_metadata"))response.sendRedirect("provide_metadata.jsp"); //for displaying metadata
+		else if(val.equals("movie_add"))response.sendRedirect("movie_add.jsp"); //for adding movies
+		else if(val.equals("add_information"))response.sendRedirect("add_information.jsp"); //for adding movies
 
-		
 	}
 
 }

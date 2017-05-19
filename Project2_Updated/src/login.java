@@ -1,29 +1,25 @@
 
 
+
+import package_test.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.mysql.jdbc.Connection;
-
-import package_test.*;
-
-import java.io.*;
-import java.sql.*;
-import javax.servlet.*;
-import com.mysql.*;
-
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
 
 /**
  * Servlet implementation class login
@@ -85,7 +81,10 @@ public class login extends HttpServlet {
 				if(request.getParameter("password")!=null){
 				password = (String) request.getParameter("password");
 				}
-				
+				String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+				System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
+				// Verify CAPTCHA.
+				boolean valid = VerifyUtils.verify(gRecaptchaResponse);
 				Statement select_login = test_connection.createStatement();
 				String query_login= "select * from customers where email='" + email + 
 									"' and password ='" + password + "'" + " limit 1";
@@ -116,15 +115,15 @@ public class login extends HttpServlet {
 							Declarations.session_active.put(session, session_local_details);
 						if(!Declarations.cart.containsKey(session))
 							Declarations.cart.put(session, new cart_main());
-						String remoteAddr = request.getRemoteAddr();
-				        ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-				        reCaptcha.setPrivateKey("6LfBMyAUAAAAAHPqAlU6HzqTAdEGfB6axGC1BM9j");
-
-				        String challenge = request.getParameter("recaptcha_challenge_field");
-				        String uresponse = request.getParameter("recaptcha_response_field");
-				        ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, challenge, uresponse);
-
-				        if (reCaptchaResponse.isValid()) {
+//						String remoteAddr = request.getRemoteAddr();
+//				        ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
+//				        reCaptcha.setPrivateKey("6LfBMyAUAAAAAHPqAlU6HzqTAdEGfB6axGC1BM9j");
+//
+//				        String challenge = request.getParameter("recaptcha_challenge_field");
+//				        String uresponse = request.getParameter("recaptcha_response_field");
+//				        ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, challenge, uresponse);
+//
+				        if (valid) {
 				          //out.print("Answer was entered correctly!");
 				        	RequestDispatcher dispatcher = request.getRequestDispatcher("criteria_search.jsp");
 							test_connection.close();

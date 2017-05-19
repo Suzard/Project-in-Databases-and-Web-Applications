@@ -18,7 +18,7 @@
 <%@page import="java.util.*"%>
 <%@page import="java.lang.Object.*"%>
 <%@page import="java.net.URLEncoder"%>
-<%@page import="package_test.*"%>;
+<%@page import="package_test.*"%>
 
 <%Class.forName("com.mysql.jdbc.Driver"); %>
 <%int id=0,prev_id=1; %>
@@ -133,7 +133,7 @@ String star_lastname = "";
 	Iterator <Map.Entry<Integer, ArrayList<Object>>> iterating =  data.entrySet().iterator();
 %>
 
-		<form action="confirmation_page.jsp">
+<form action="confirmation_page.jsp">
 <input type="submit" value="checkout">
 </form>
 
@@ -186,7 +186,18 @@ String star_lastname = "";
 		<a href= "star_file.jsp?Star=<%=splitting[0]%>&Last=<%=splitting[1]%> " ><%=splitting[0]+" " +splitting[1]%></a>
 		<% }%>
 		<td><a href= <%=e.get(4).toString()%>><%=e.get(4).toString()%></a></td> <!-- trailer -->
-		
+		<td>
+		<%
+		String encoded_director = URLEncoder.encode(director);
+		String cart_url = "servlet_cart?cart_movie_id=" + entry.getKey().toString() + "&year=" +year +"&movie_name="+ encoded_title_url+
+				"&title=" + encoded_title_url + "&director=" + encoded_director + "&star_firstname=" + star_firstname +
+				"&star_lastname=" + star_lastname + "&check=0";
+		%>
+		<form method="post" action=<%=cart_url%>>
+		<input type="number" name ="quantity">
+		<input type="submit" value="Add to Cart">
+		</form>
+		</td>
 		<tr>
 		<%}%>
         </table>

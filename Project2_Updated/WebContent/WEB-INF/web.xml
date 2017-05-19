@@ -37,6 +37,22 @@
     <url-pattern>/login</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>employee_login</servlet-name>
+    <servlet-class>employee_login</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>employee_login</servlet-name>
+    <url-pattern>/employee_login</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <servlet-name>_dashboard</servlet-name>
+    <servlet-class>_dashboard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>_dashboard</servlet-name>
+    <url-pattern>/_dashboard</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>servlet_cart</servlet-name>
     <servlet-class>servlet_cart</servlet-class>
   </servlet>
@@ -44,4 +60,16 @@
     <servlet-name>servlet_cart</servlet-name>
     <url-pattern>/servlet_cart</url-pattern>
   </servlet-mapping>
+  
+ <security-constraint>
+   <web-resource-collection>
+    <web-resource-name>HTTPSOnly</web-resource-name>
+    <url-pattern>/*</url-pattern>
+ </web-resource-collection>
+ <user-data-constraint>
+    <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+ </user-data-constraint>
+</security-constraint>
+
+
 </web-app>

@@ -256,7 +256,7 @@ try {
 		System.out.println("Not successful");
 		out.println("Connection not successfull");}
 	else {
-
+		System.out.println(" HI THERE");
 		Map<Integer, ArrayList<Object>> data = new LinkedHashMap<Integer, ArrayList<Object>>();
 		ArrayList<Integer> list_movies = new ArrayList<Integer>();
 		ArrayList<Integer> list_movies_duplicate = new ArrayList<Integer>();

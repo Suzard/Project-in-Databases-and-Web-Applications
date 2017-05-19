@@ -26,6 +26,7 @@
 
 <tr><input type="radio" name="criteria_search" value="display_alphabetically" >display alphabetically</tr>
 <tr><input type="radio" name="criteria_search" value="display_genres" >display genres</tr><br>
+<tr><input type="radio" name="criteria_search" value="employee_add" >employee </tr><br>
 <tr><input type="submit" name="Submit"> </tr>
 
 </table>
