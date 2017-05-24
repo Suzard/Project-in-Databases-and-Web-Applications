@@ -11,7 +11,8 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-    private EditText edit_text;
+    private EditText username, password;
+    String user_name=null, pass_word=null;
 
 
 
@@ -19,7 +20,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        edit_text = (EditText) findViewById(R.id.edit_text);
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+
+        user_name = username.getText().toString();
+        pass_word = password.getText().toString();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+
+        username.setText(user_name);
+        password.setText(pass_word);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
     }
 
 }
