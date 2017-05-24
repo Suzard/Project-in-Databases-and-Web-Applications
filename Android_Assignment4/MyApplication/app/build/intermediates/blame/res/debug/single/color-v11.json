@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/balaji/Documents/Github/Updated_CS122B/Android_Assignment4/MyApplication/app/build/intermediates/res/merged/debug/color-v11/abc_background_cache_hint_selector_material_light.xml",
+        "source": "/Users/balaji/.android/build-cache/b9bfec8ff69bd64fa51c2bdc2b2fb6da8e745294/output/res/color-v11/abc_background_cache_hint_selector_material_light.xml"
+    },
+    {
+        "merged": "/Users/balaji/Documents/Github/Updated_CS122B/Android_Assignment4/MyApplication/app/build/intermediates/res/merged/debug/color-v11/abc_background_cache_hint_selector_material_dark.xml",
+        "source": "/Users/balaji/.android/build-cache/b9bfec8ff69bd64fa51c2bdc2b2fb6da8e745294/output/res/color-v11/abc_background_cache_hint_selector_material_dark.xml"
+    }
+]
