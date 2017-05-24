@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/balaji/Documents/Github/Updated_CS122B/Android_Assignment4/MyApplication/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher.png",
+        "source": "/Users/balaji/Documents/Github/Updated_CS122B/Android_Assignment4/MyApplication/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/balaji/Documents/Github/Updated_CS122B/Android_Assignment4/MyApplication/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher_round.png",
+        "source": "/Users/balaji/Documents/Github/Updated_CS122B/Android_Assignment4/MyApplication/app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
+    }
+]
