@@ -7,6 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
 <br><br><br><br><br>
@@ -18,12 +19,12 @@
 <tr> <input type ="submit" value="Login"></tr>
 
 <%
-          ReCaptcha c = ReCaptchaFactory.newReCaptcha("6LfBMyAUAAAAAGecU4wVlV4jI0JPvKqfmFBTl5Ny", "6LfBMyAUAAAAAHPqAlU6HzqTAdEGfB6axGC1BM9j", false);
-          out.print(c.createRecaptchaHtml(null, null));
+        //  ReCaptcha c = ReCaptchaFactory.newReCaptcha("6LfBMyAUAAAAAGecU4wVlV4jI0JPvKqfmFBTl5Ny", "6LfBMyAUAAAAAHPqAlU6HzqTAdEGfB6axGC1BM9j", false);
+        //  out.print(c.createRecaptchaHtml(null, null));
         %>
 </table>
 
-
+		<div class="g-recaptcha" data-sitekey="6LfBMyAUAAAAAGecU4wVlV4jI0JPvKqfmFBTl5Ny"></div>
 </form>
 
         

@@ -24,9 +24,10 @@
 <form method="post" action="browse_criteria">
 <table>
 
-<tr><input type="radio" name="criteria_search" value="display_alphabetically" >display alphabetically</tr>
-<tr><input type="radio" name="criteria_search" value="display_genres" >display genres</tr><br>
-<tr><input type="radio" name="criteria_search" value="employee_add" >employee </tr><br>
+<tr><input type="radio" name="criteria_search" value="star_add" >insert new star</tr>
+<tr><input type="radio" name="criteria_search" value="provide_metadata" >provide metadata</tr><br>
+<tr><input type="radio" name="criteria_search" value="movie_add" >add movie </tr><br>
+<tr><input type="radio" name="criteria_search" value="add_information" >add information </tr><br>
 <tr><input type="submit" name="Submit"> </tr>
 
 </table>
