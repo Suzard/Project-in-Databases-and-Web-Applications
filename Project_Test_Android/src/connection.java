@@ -42,19 +42,24 @@ public class connection extends HttpServlet {
             String line;
             BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
             StringBuilder sb = new StringBuilder();
-            
+            String user_name="", pass_word="";
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
             sin.close();
-            String sb_opt = sb.toString().trim();
+            String[] sb_opt = sb.toString().trim().split("\\s+");
+            
+            user_name = sb_opt[0];
+            pass_word  = sb_opt[1];
+            
             //String recievedString = new String(input);
             response.setStatus(HttpServletResponse.SC_OK);
             OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
  
             //Integer doubledValue = Integer.parseInt(recievedString) * 2;
- 
+            if(user_name.equals("a@email.com"))
             writer.write("true");
+            else writer.write("false");
             writer.flush();
             writer.close();
  

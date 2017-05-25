@@ -51,8 +51,8 @@ public class connection extends HttpServlet {
 			response.getOutputStream().println("string_builder" + string_builder);
 			String string_split[] = string_builder.toString().trim().split("\\s+");
 			
-			//username = string_split[0];
-			//password = string_split[1];
+			username = string_split[0];
+			password = string_split[1];
 
 			try {
 

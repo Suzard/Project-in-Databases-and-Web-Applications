@@ -200,19 +200,20 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    EditText inputValue=null;
+    EditText edit_email=null, edit_password=null;
     Integer doubledValue =0;
-    Button doubleMe;
+    Button button_submit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        inputValue = (EditText) findViewById(R.id.username);
-        doubleMe = (Button) findViewById(R.id.submit_button);
+        edit_email = (EditText) findViewById(R.id.email);
+        edit_password = (EditText) findViewById(R.id.password);
+        button_submit = (Button) findViewById(R.id.submit_button);
 
-        doubleMe.setOnClickListener(this);
+        button_submit.setOnClickListener(this);
     }
 
     @Override
@@ -228,8 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             URL url = new URL("http://54.183.57.169:8080/Project_Test_Android/connection");
                             URLConnection connection = url.openConnection();
 
-                            String inputString = inputValue.getText().toString();
-                            //inputString = URLEncoder.encode(inputString, "UTF-8");
+                            String inputString = edit_email.getText().toString() + " " + edit_password.getText().toString();
 
                             Log.d("inputString", inputString);
 
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             runOnUiThread(new Runnable() {
                                 public void run() {
                                     if(m.contains("true")) Toast.makeText(MainActivity.this,"True",Toast.LENGTH_LONG).show();
-                                    inputValue.setText(m);
+                                    edit_email.setText(m);
 
                                 }
                             });
