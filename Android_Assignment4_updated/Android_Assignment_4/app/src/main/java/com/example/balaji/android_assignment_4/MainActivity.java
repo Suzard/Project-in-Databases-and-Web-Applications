@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -109,9 +110,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             runOnUiThread(new Runnable() {
                                 public void run() {
-                                    if (m.contains("true"))
-                                        Toast.makeText(MainActivity.this, "True", Toast.LENGTH_LONG).show();
-                                    edit_email.setText(m);
+                                    if (m.contains("true")) {
+                                        Toast.makeText(MainActivity.this, "Logging in...", Toast.LENGTH_LONG).show();
+                                        Intent i = new Intent(MainActivity.this,Main2Activity.class);
+                                        startActivity(i);
+
+                                        edit_email.setText(m);
+                                    }else{
+                                        Toast.makeText(MainActivity.this, "Incorrect username or password", Toast.LENGTH_LONG).show();
+                                    }
 
                                 }
                             });
