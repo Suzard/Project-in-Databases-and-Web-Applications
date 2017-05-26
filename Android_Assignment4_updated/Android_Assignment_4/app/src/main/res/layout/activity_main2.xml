@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.balaji.android_assignment_4.Main2Activity">
-<TextView
-    android:id="@+id/dispay_results"
-    android:text="Welcome to screen 2"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Please enter the movie name" />
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="search"
+        android:onClick="submit_click"/>
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/display_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Movie List to be displayed here"/>
+    </ScrollView>
 </LinearLayout>

@@ -4,6 +4,7 @@ package com.example.balaji.android_assignment_4;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -20,8 +21,7 @@ import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    EditText edit_email = null, edit_password = null;
-    Integer doubledValue = 0;
+    EditText edit_email, edit_password;
     Button button_submit;
     SharedPreferences shared_preference;
 
@@ -107,15 +107,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             final String m = str;
                             in.close();
-
+                            HttpURLConnection conn = (HttpURLConnection) connection;
+                            conn.disconnect();
                             runOnUiThread(new Runnable() {
                                 public void run() {
                                     if (m.contains("true")) {
                                         Toast.makeText(MainActivity.this, "Logging in...", Toast.LENGTH_LONG).show();
                                         Intent i = new Intent(MainActivity.this,Main2Activity.class);
                                         startActivity(i);
-
-                                        edit_email.setText(m);
                                     }else{
                                         Toast.makeText(MainActivity.this, "Incorrect username or password", Toast.LENGTH_LONG).show();
                                     }

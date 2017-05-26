@@ -10,12 +10,11 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
-  <servlet-name>connection</servlet-name>
-  <servlet-class>connection</servlet-class>
+    <servlet-name>connection</servlet-name>
+    <servlet-class>connection</servlet-class>
   </servlet>
-  
   <servlet-mapping>
-  <servlet-name>connection</servlet-name>
-  <url-pattern>/connection</url-pattern>
+    <servlet-name>connection</servlet-name>
+    <url-pattern>/connection</url-pattern>
   </servlet-mapping>
 </web-app>
