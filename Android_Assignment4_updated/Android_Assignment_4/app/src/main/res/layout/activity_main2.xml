@@ -25,6 +25,7 @@
         android:id="@+id/display_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
         android:hint="Movie List to be displayed here"/>
     </ScrollView>
 </LinearLayout>

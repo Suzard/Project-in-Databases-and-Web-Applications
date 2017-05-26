@@ -79,11 +79,13 @@ public class test_servlet extends HttpServlet {
 			}
 
 			Statement stmt = test_connection.createStatement();
-			String search_query = "select * from movies where title like '%" + string_search + "%';";
+			String search_query = "select * from movies where title like '%" + string_search + "%' order by title;";
 			ResultSet rs = stmt.executeQuery(search_query);
 			ArrayList<String> list_movies = new ArrayList<String>();
 			StringBuilder sb_movies = new StringBuilder();
-			if (rs.next()) {
+			String send_output="";
+			while (rs.next()) {
+				send_output = send_output+rs.getString("title") +",";
 				sb_movies.append(rs.getString("title"));
 				
 				sb_movies.append(",");
@@ -93,7 +95,7 @@ public class test_servlet extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_OK);
 				OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 				
-				writer.write(sb_movies.toString().trim());
+				writer.write(send_output);
 				writer.flush();
 				writer.close();
 //				String json = new Gson().toJson(list_movies);
