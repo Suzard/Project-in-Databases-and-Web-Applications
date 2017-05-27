@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +24,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     EditText edit_search;
     Button button_search, button_prev, button_next;
     TextView text_search;
-    int result_count,current_page=1,results_perpage=5;
+    int result_count, current_page = 0, results_perpage = 5;
+    List<String> list_movies = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,12 +84,13 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 //                                    if (m.contains("true")) {
                                     String display_text = "";
                                     for (int i = 0; i < result_count; i++) {
+                                        list_movies.add(opt_split_string[i]);
+                                    }
+                                    for (int i = 0; i < results_perpage; i++) {
                                         display_text = display_text + opt_split_string[i] + "\n";
                                         Log.d("Final String", display_text);
                                     }
 
-                                    Log.d("Final Length", Integer.toString(opt_split_string.length));
-//                                        Log.d("List",opt_split_string[0]);
                                     if (!display_text.equals("")) {
                                         text_search = (TextView) findViewById(R.id.display_text);
                                         text_search.setText(display_text);
@@ -108,11 +113,26 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
                     }
                 }).start();
+                break;
             case R.id.prev:
+                String display_text = "";
                 Toast.makeText(Main2Activity.this, "previous button is pressed", Toast.LENGTH_LONG).show();
+                break;
             case R.id.next:
+                String display_text1 = "";
                 Toast.makeText(Main2Activity.this, "next button is pressed", Toast.LENGTH_LONG).show();
-
+                try {
+                    current_page += results_perpage;
+                    for (int i = 0; i <= (current_page + results_perpage); i++) {
+                        if (list_movies.get(i) != null) {
+                            display_text1 = display_text1 + list_movies.get(i) + "\n";
+                        }
+                        //text_search = (TextView) findViewById(R.id.display_text);
+                        text_search.setText(display_text1);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
