@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,13 +14,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 
 public class Main2Activity extends AppCompatActivity implements View.OnClickListener {
     EditText edit_search;
-    Button button_search;
+    Button button_search, button_prev, button_next;
     TextView text_search;
+    int result_count,current_page=1,results_perpage=5;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,9 +31,13 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         edit_search = (EditText) findViewById(R.id.search);
         button_search = (Button) findViewById(R.id.search_button);
         text_search = (TextView) findViewById(R.id.display_text);
+        button_prev = (Button) findViewById(R.id.prev);
+        button_next = (Button) findViewById(R.id.next);
         button_search.setOnClickListener(this);
-    }
+        button_prev.setOnClickListener(this);
+        button_next.setOnClickListener(this);
 
+    }
 
 
     @Override
@@ -65,23 +72,24 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                             }
                             final String m = str;
                             final String[] opt_split_string = str.split(",");
+                            result_count = opt_split_string.length;
                             in.close();
 
                             runOnUiThread(new Runnable() {
                                 public void run() {
 //                                    if (m.contains("true")) {
-                                        String display_text="";
-                                        for(int i=0;i<opt_split_string.length;i++){
-                                            display_text = display_text + opt_split_string[i] + "\n";
-                                            Log.d("Final String",display_text);
-                                        }
+                                    String display_text = "";
+                                    for (int i = 0; i < result_count; i++) {
+                                        display_text = display_text + opt_split_string[i] + "\n";
+                                        Log.d("Final String", display_text);
+                                    }
 
-                                        Log.d("Final Length",Integer.toString(opt_split_string.length));
+                                    Log.d("Final Length", Integer.toString(opt_split_string.length));
 //                                        Log.d("List",opt_split_string[0]);
-                                    if(!display_text.equals("")) {
+                                    if (!display_text.equals("")) {
                                         text_search = (TextView) findViewById(R.id.display_text);
                                         text_search.setText(display_text);
-                                    }else{
+                                    } else {
                                         text_search = (TextView) findViewById(R.id.display_text);
                                         text_search.setText("No Movies found for the entered query");
                                     }
@@ -100,6 +108,10 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
                     }
                 }).start();
+            case R.id.prev:
+                Toast.makeText(Main2Activity.this, "previous button is pressed", Toast.LENGTH_LONG).show();
+            case R.id.next:
+                Toast.makeText(Main2Activity.this, "next button is pressed", Toast.LENGTH_LONG).show();
 
                 break;
         }
@@ -107,56 +119,5 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
 }
 
-//    @Override
-//    public void onClick(View v) {
-//
-//        switch (v.getId()) {
-//            case R.id.search_button:
-//
-//                new Thread(new Runnable() {
-//                    public void run() {
-//
-//                        try {
-//                            URL url = new URL("http://54.183.57.169:8080/Project_Test_Android/test_servlet");
-//                            URLConnection connection = url.openConnection();
-//
-//                            String inputString = edit_search.getText().toString();
-//
-//                            Log.d("inputString", inputString);
-//
-//                            connection.setDoOutput(true);
-//                            OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-//                            out.write(inputString);
-//                            out.close();
-//
-//                            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//
-//                            String returnString = "";
-//                            String str = "";
-//
-//                            while ((returnString = in.readLine()) != null) {
-//                                str = str + returnString;
-//                            }
-//                            final String m = str;
-//                            in.close();
-//
-//
-//                            runOnUiThread(new Runnable() {
-//                                public void run() {
-//                                    text_movie_list.setText(m);
-//
-//                                }
-//                            });
-//
-//                        } catch (Exception e) {
-//                            Log.d("Exception", e.toString());
-//                        }
-//
-//                    }
-//                }).start();
-//
-//                break;
-//        }
-//    }
 
 
