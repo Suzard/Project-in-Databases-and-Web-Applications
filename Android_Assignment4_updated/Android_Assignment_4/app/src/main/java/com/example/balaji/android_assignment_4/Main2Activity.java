@@ -73,12 +73,18 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                                         String display_text="";
                                         for(int i=0;i<opt_split_string.length;i++){
                                             display_text = display_text + opt_split_string[i] + "\n";
-//                                            Log.d("Final String",display_text);
+                                            Log.d("Final String",display_text);
                                         }
 
-//                                        Log.d("Final Length",Integer.toString(opt_split_string.length));
-                                    text_search = (TextView) findViewById(R.id.display_text);
-                                    text_search.setText(display_text);
+                                        Log.d("Final Length",Integer.toString(opt_split_string.length));
+//                                        Log.d("List",opt_split_string[0]);
+                                    if(!display_text.equals("")) {
+                                        text_search = (TextView) findViewById(R.id.display_text);
+                                        text_search.setText(display_text);
+                                    }else{
+                                        text_search = (TextView) findViewById(R.id.display_text);
+                                        text_search.setText("No Movies found for the entered query");
+                                    }
 //                                        Intent i = new Intent(Main2Activity.this,Main2Activity.class);
 //                                        startActivity(i);
 //                                    }else{

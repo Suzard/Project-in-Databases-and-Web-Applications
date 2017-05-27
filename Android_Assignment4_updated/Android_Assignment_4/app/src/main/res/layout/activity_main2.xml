@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     android:visibility="visible">
 
@@ -10,22 +9,56 @@
         android:id="@+id/search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Please enter the movie name" />
+        android:hint="Please enter the movie name"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_button"
+        android:id="@+id/scrollView2"></ScrollView>
 
     <Button
         android:id="@+id/search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="search"
-        android:onClick="submit_click"/>
-    <ScrollView
+
+        android:onClick="submit_click"
+        android:layout_below="@+id/search"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp" />
+    <Button
+        android:id="@+id/prev"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:text="Prev"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/display_text"
+        android:layout_alignStart="@+id/display_text" />
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/prev"/>
+
     <TextView
         android:id="@+id/display_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:hint="Movie List to be displayed here"
         android:inputType="textMultiLine"
-        android:hint="Movie List to be displayed here"/>
-    </ScrollView>
-</LinearLayout>
+        android:layout_below="@+id/scrollView2"
+        android:layout_alignRight="@+id/search"
+        android:layout_alignEnd="@+id/search"
+        android:layout_marginRight="11dp"
+        android:layout_marginEnd="11dp" />
+
+
+</RelativeLayout>
