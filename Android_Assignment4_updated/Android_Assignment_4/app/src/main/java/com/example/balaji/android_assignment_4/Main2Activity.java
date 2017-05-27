@@ -122,12 +122,14 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 String display_text1 = "";
                 Toast.makeText(Main2Activity.this, "next button is pressed", Toast.LENGTH_LONG).show();
                 try {
+                    if((current_page+results_perpage)<result_count)
                     current_page += results_perpage;
-                    for (int i = 0; i <= (current_page + results_perpage); i++) {
+                    for (int i = current_page; i <= (current_page + results_perpage); i++) {
                         if (list_movies.get(i) != null) {
                             display_text1 = display_text1 + list_movies.get(i) + "\n";
                         }
-                        //text_search = (TextView) findViewById(R.id.display_text);
+                        text_search = (TextView) findViewById(R.id.display_text);
+                        text_search.setText("");
                         text_search.setText(display_text1);
                     }
                 } catch (Exception e) {
