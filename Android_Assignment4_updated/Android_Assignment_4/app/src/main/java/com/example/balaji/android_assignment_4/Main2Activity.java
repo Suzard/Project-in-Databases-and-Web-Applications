@@ -50,7 +50,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
         switch (v.getId()) {
             case R.id.search_button:
-
+                list_movies.clear();
                 new Thread(new Runnable() {
                     public void run() {
 
